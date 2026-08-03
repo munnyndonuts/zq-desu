@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZQ DESU</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --card-hover: #222633;
+  --border: #2a2e3c;
+  --accent: #7c5cfc;
+  --accent-light: #9d85ff;
+  --green: #4ade80;
+  --yellow: #facc15;
+  --red: #f87171;
+  --orange: #fb923c;
+  --cyan: #22d3ee;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-faint: #64748b;
+  --radius: 12px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 24px 20px 60px; }
+.header { text-align: center; margin-bottom: 36px; padding: 32px 0 28px; border-bottom: 1px solid var(--border); }
+.header h1 {
+  font-size: 1.7rem; font-weight: 700;
+  background: linear-gradient(135deg, var(--cyan), var(--accent), var(--yellow));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 6px;
+}
+.header .subtitle { color: var(--text-dim); font-size: 0.95rem; }
+.header .meta { margin-top: 10px; font-size: 0.8rem; color: var(--text-faint); }
+.section { margin-bottom: 36px; }
+.section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.section-title .icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+.icon-vocab { background: rgba(74,222,128,0.15); color: var(--green); }
+.icon-grammar { background: rgba(250,204,21,0.15); color: var(--yellow); }
+.icon-kanji { background: rgba(124,92,252,0.15); color: var(--accent-light); }
+.icon-gap { background: rgba(248,113,113,0.15); color: var(--red); }
+.icon-plan { background: rgba(251,146,60,0.15); color: var(--orange); }
+.icon-prof { background: rgba(34,211,238,0.15); color: var(--cyan); }
+.icon-flow { background: rgba(34,211,238,0.15); color: var(--cyan); }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; transition: background 0.2s; }
+.stat-card:hover { background: var(--card-hover); }
+.stat-card .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-faint); margin-bottom: 6px; }
+.stat-card .value { font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; }
+.stat-card .detail { font-size: 0.82rem; color: var(--text-dim); }
+.stat-card .bar-container { margin-top: 12px; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; }
+.stat-card .bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.compare-table th, .compare-table td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+.compare-table th { color: var(--text-dim); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; background: rgba(255,255,255,0.02); }
+.compare-table td:first-child { font-weight: 500; }
+.compare-table .kaishi-col { color: var(--green); }
+.compare-table .beginner-col { color: var(--cyan); }
+.compare-table .intermediate-col { color: var(--yellow); }
+.compare-table tr:hover { background: rgba(255,255,255,0.02); }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; }
+.badge-green { background: rgba(74,222,128,0.15); color: var(--green); }
+.badge-yellow { background: rgba(250,204,21,0.15); color: var(--yellow); }
+.badge-red { background: rgba(248,113,113,0.15); color: var(--red); }
+.badge-orange { background: rgba(251,146,60,0.15); color: var(--orange); }
+.badge-purple { background: rgba(124,92,252,0.15); color: var(--accent-light); }
+.badge-cyan { background: rgba(34,211,238,0.15); color: var(--cyan); }
+.grammar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.grammar-item { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; transition: background 0.2s; }
+.grammar-item:hover { background: var(--card-hover); }
+.grammar-item .jp { font-size: 0.95rem; font-weight: 600; margin-bottom: 2px; }
+.grammar-item .meaning { font-size: 0.75rem; color: var(--text-dim); }
+.grammar-item .level { margin-top: 4px; }
+.prof-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.prof-table th, .prof-table td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+.prof-table th { color: var(--text-dim); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
+.prof-status { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot-green { background: var(--green); }
+.dot-yellow { background: var(--yellow); }
+.dot-red { background: var(--red); }
+.dot-orange { background: var(--orange); }
+.dot-cyan { background: var(--cyan); }
+.plan-phase { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 14px; position: relative; overflow: hidden; }
+.plan-phase::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+.phase-1::before { background: var(--green); }
+.phase-2::before { background: var(--cyan); }
+.phase-3::before { background: var(--yellow); }
+.phase-4::before { background: var(--orange); }
+.phase-5::before { background: var(--accent); }
+.plan-phase .phase-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.plan-phase .phase-title { font-size: 1.05rem; font-weight: 700; }
+.plan-phase .phase-duration { font-size: 0.78rem; color: var(--text-faint); }
+.plan-phase .phase-content { font-size: 0.85rem; color: var(--text-dim); }
+.plan-phase .phase-content ul { list-style: none; padding: 0; margin-top: 8px; }
+.plan-phase .phase-content li { padding: 4px 0; padding-left: 20px; position: relative; }
+.plan-phase .phase-content li::before { content: '→'; position: absolute; left: 0; color: var(--accent-light); }
+.resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.resource-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: background 0.2s; }
+.resource-card:hover { background: var(--card-hover); }
+.resource-card .r-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+.resource-card .r-type { font-size: 0.7rem; color: var(--text-faint); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.03em; }
+.resource-card .r-desc { font-size: 0.8rem; color: var(--text-dim); }
+.progress-overview { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-bottom: 8px; }
+.progress-ring { width: 120px; text-align: center; }
+.progress-ring svg { transform: rotate(-90deg); }
+.progress-ring .ring-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 8; }
+.progress-ring .ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
+.progress-ring .ring-label { font-size: 0.75rem; color: var(--text-dim); margin-top: 6px; }
+.progress-ring .ring-value { font-size: 1.15rem; font-weight: 700; }
+.note-box { background: rgba(124,92,252,0.06); border: 1px solid rgba(124,92,252,0.15); border-radius: var(--radius); padding: 16px 20px; margin-top: 12px; font-size: 0.84rem; color: var(--text-dim); }
+.note-box strong { color: var(--text); }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.badge-green { background: rgba(74,222,128,0.15); color: var(--green); }
+.badge-yellow { background: rgba(250,204,21,0.15); color: var(--yellow); }
+.badge-red { background: rgba(248,113,113,0.15); color: var(--red); }
+.badge-orange { background: rgba(251,146,60,0.15); color: var(--orange); }
+.badge-purple { background: rgba(124,92,252,0.15); color: var(--accent-light); }
+.badge-cyan { background: rgba(34,211,238,0.15); color: var(--cyan); }
+.immersion-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; transition: background 0.2s; }
+.immersion-card:hover { background: var(--card-hover); }
+.immersion-card h4 { margin-bottom: 8px; }
+.mining-flow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 12px 0; }
+.mining-flow .mining-step { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 0.82rem; }
+.mining-flow .mining-arrow { color: var(--text-faint); font-size: 1.1rem; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0; }
+.stat-mini { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow: visible; }
+.stat-mini .stat-label { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 4px; }
+.stat-mini .stat-value { font-size: 1.05rem; font-weight: 700; }
+.stat-mini .stat-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.stat-mini .stat-bar-fill { height: 100%; border-radius: 2px; }
+.flow-diagram { display: flex; align-items: stretch; gap: 0; flex-wrap: wrap; margin: 16px 0; }
+.flow-step { flex: 1; min-width: 180px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; position: relative; margin: 4px; }
+.flow-step .step-num { font-size: 0.7rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.flow-step .step-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+.flow-step .step-desc { font-size: 0.78rem; color: var(--text-dim); }
+.flow-arrow { display: flex; align-items: center; justify-content: center; color: var(--text-faint); font-size: 1.5rem; padding: 0 4px; }
+@media (max-width: 640px) {
+  .header h1 { font-size: 1.3rem; }
+  .cards-grid, .grammar-grid, .resource-grid { grid-template-columns: 1fr; }
+  .compare-table, .prof-table { font-size: 0.74rem; }
+  .compare-table th, .compare-table td, .prof-table th, .prof-table td { padding: 7px; }
+  .flow-diagram { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); padding: 4px 0; }
+}
+
+/* Edit Stats Modal */
+.stats-modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7); z-index: 9999; justify-content: center; align-items: flex-start;
+  padding-top: 40px; overflow-y: auto;
+}
+.stats-modal-overlay.active { display: flex; }
+.stats-modal {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
+  max-width: 560px; width: 90%; margin-bottom: 40px;
+}
+.stats-modal h3 { margin-bottom: 16px; font-size: 1rem; color: var(--text); }
+.stats-modal-field { margin-bottom: 14px; }
+.stats-modal-field label { font-size: 0.78rem; color: var(--text-dim); display: block; margin-bottom: 4px; }
+.stats-modal-field input, .stats-modal-field select {
+  background: var(--card); border: 1px solid var(--border); color: var(--text);
+  border-radius: 6px; padding: 6px 10px; font-size: 0.85rem; width: 100%;
+}
+.stats-modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+.stats-modal-actions button {
+  border: none; border-radius: 6px; padding: 8px 20px; font-size: 0.85rem; cursor: pointer; font-weight: 600;
+}
+.btn-save { background: var(--accent); color: white; }
+.btn-cancel { background: var(--card); border: 1px solid var(--border) !important; color: var(--text-dim); }
+
+
+/* Categories Modal */
+.cat-modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: flex-start;
+  padding-top: 40px; overflow-y: auto;
+}
+.cat-modal-overlay.active { display: flex; }
+.cat-modal {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 24px;
+  max-width: 480px; width: 90%; margin-bottom: 40px;
+}
+.cat-modal h3 { margin-bottom: 16px; font-size: 1rem; color: var(--text); }
+.cat-list { max-height: 300px; overflow-y: auto; margin-bottom: 16px; }
+.cat-row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border);
+}
+.cat-row input[type="color"] {
+  width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: none; padding: 0;
+}
+.cat-row input[type="text"] {
+  background: var(--card); border: 1px solid var(--border); color: var(--text);
+  border-radius: 6px; padding: 4px 8px; font-size: 0.82rem; flex: 1;
+}
+.cat-row .cat-count { font-size: 0.72rem; color: var(--text-faint); min-width: 30px; text-align: right; }
+.cat-row .cat-del {
+  background: none; border: none; color: var(--red); cursor: pointer; font-size: 0.82rem; padding: 4px 6px;
+}
+.cat-add-row {
+  display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--border);
+}
+.cat-add-row input[type="color"] {
+  width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; background: none; padding: 0;
+}
+.cat-add-row input[type="text"] {
+  background: var(--card); border: 1px solid var(--border); color: var(--text);
+  border-radius: 6px; padding: 6px 8px; font-size: 0.82rem; flex: 1;
+}
+.cat-modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+.cat-modal-actions button {
+  border: none; border-radius: 6px; padding: 8px 20px; font-size: 0.85rem; cursor: pointer; font-weight: 600;
+}
+
+
+/* Step states */
+.flow-step.completed { opacity: 0.55; }
+.flow-step.completed .step-num::after { content: " ✓"; color: var(--green); }
+.flow-step.current-step { box-shadow: 0 0 0 1px var(--accent), 0 4px 12px rgba(124,92,252,0.15); border-radius: 8px; }
+.level-selector-hint { font-size: 0.72rem; color: var(--text-faint); margin-top: 4px; }
+
+
+/* Tracker range buttons */
+.range-bar { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.range-btn { background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; cursor: pointer; transition: all 0.15s; }
+.range-btn:hover { border-color: var(--accent); color: var(--text); }
+.range-btn.active { background: var(--accent); border-color: var(--accent); color: white; font-weight: 600; }
+.chart-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.chart-toggle button { background: var(--bg); border: none; color: var(--text-dim); padding: 4px 12px; font-size: 0.75rem; cursor: pointer; }
+.chart-toggle button.active { background: var(--accent); color: white; }
+.timer-display { font-size: 1.5rem; font-weight: 700; color: var(--accent-light); font-variant-numeric: tabular-nums; min-width: 80px; text-align: center; }
+.timer-btn { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 14px; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+.timer-btn:hover { border-color: var(--accent); }
+.timer-btn.start { background: var(--green); border-color: var(--green); color: white; }
+.timer-btn.stop { background: var(--red); border-color: var(--red); color: white; }
+.timer-btn.pause { background: var(--orange); border-color: var(--orange); color: white; }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>ZQ DESU</h1>
+  <div class="subtitle">ZQ's Japanese language learning journey, study plan, resources, and tracker</div>
+  <div class="meta">Your level: 
+    <select id="levelSelector" style="background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 2px 8px; font-size: 0.82rem; cursor: pointer;">
+      <option value="N5 (Beginner)">N5 (Beginner)</option>
+      <option value="N4 (Pre-Intermediate)">N4 (Pre-Intermediate)</option>
+      <option value="N3 (Intermediate)">N3 (Intermediate)</option>
+      <option value="N2 (Upper-Intermediate)">N2 (Upper-Intermediate)</option>
+      <option value="N1 (Advanced)">N1 (Advanced)</option>
+    </select>
+    · Updated Aug 3, 2026
+  </div>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 12px;">
+    <span class="badge badge-green" id="badge-kaishi">Kaishi: ~1,291 cards remaining · 10 new/day</span>
+    <span class="badge badge-purple" id="badge-wk">WaniKani: Level 3 · 10–15 lessons/weekday</span>
+    <span class="badge badge-cyan" id="badge-bp-grammar">Bunpro N5 Grammar: 47/132</span>
+    <span class="badge badge-yellow" id="badge-bpg-n4">Bunpro N4 Grammar: 0/97</span>
+    <span class="badge badge-orange" id="badge-bpg-n3">Bunpro N3 Grammar: 0/89</span>
+    <span class="badge badge-red" id="badge-bpg-n2">Bunpro N2 Grammar: 0/110</span>
+    <span class="badge badge-purple" id="badge-bpg-n1">Bunpro N1 Grammar: 0/105</span>
+    <span class="badge badge-cyan" id="badge-jb">Jalup Beginner: 0 / 1,000</span>
+    <span class="badge badge-yellow" id="badge-ji">Jalup Intermediate: 0 / 1,000</span>
+    <span class="badge badge-orange" id="badge-ja">Jalup Advanced: 0 / 1,000</span>
+    <span class="badge badge-purple" id="badge-jeh">Jalup Expert+Hero: 0 / 2,000</span>
+  </div>
+</div>
+
+<!-- FLOW DIAGRAM -->
+<div class="section">
+  <div class="section-title"><span class="icon icon-flow">🔄</span> Study Path Overview</div>
+  <div class="flow-diagram">
+    <div class="flow-step" id="step-1" data-step="1" data-color="green" data-label="Current" style="border-left: 3px solid var(--green); cursor: pointer; position: relative;" onclick="setCurrentStep(1)">
+      <div class="step-num" id="step-num-1">Step 1 · Current</div>
+      <div class="step-name" style="color: var(--green);">Kaishi 1.5k</div>
+      <div class="step-desc">~1,500 frequency vocab words (N5–N4). J-E definitions. No grammar instruction.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" id="step-2" data-step="2" data-color="cyan" data-label="Bridge" style="border-left: 3px solid var(--cyan); cursor: pointer; position: relative;" onclick="setCurrentStep(2)">
+      <div class="step-num" id="step-num-2">Step 2 · Bridge</div>
+      <div class="step-name" style="color: var(--cyan);">Jalup Beginner</div>
+      <div class="step-desc">1,000 i+1 sentence cards. Covers Genki I+II grammar (N5–N4). J-E definitions. Fills Kaishi's grammar gap.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" id="step-3" data-step="3" data-color="yellow" data-label="J-J Transition" style="border-left: 3px solid var(--yellow); cursor: pointer; position: relative;" onclick="setCurrentStep(3)">
+      <div class="step-num" id="step-num-3">Step 3 · J-J Transition</div>
+      <div class="step-name" style="color: var(--yellow);">Jalup Intermediate</div>
+      <div class="step-desc">1,000 J-J cards. ~150 N4–N3 grammar points (AIAIJ). Monolingual definitions. The steepest curve.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" id="step-4" data-step="4" data-color="orange" data-label="Expansion" style="border-left: 3px solid var(--orange); cursor: pointer; position: relative;" onclick="setCurrentStep(4)">
+      <div class="step-num" id="step-num-4">Step 4 · Expansion</div>
+      <div class="step-name" style="color: var(--orange);">Jalup Advanced</div>
+      <div class="step-desc">1,000 J-J cards. N3–N2 vocab expansion. Easier than Intermediate — you're used to J-J by now. ~2,000 kanji total.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step" id="step-5" data-step="5" data-color="accent" data-label="Mastery" style="border-left: 3px solid var(--accent); cursor: pointer; position: relative;" onclick="setCurrentStep(5)">
+      <div class="step-num" id="step-num-5">Step 5 · Mastery</div>
+      <div class="step-name" style="color: var(--accent-light);">Expert + Hero</div>
+      <div class="step-desc">2,000 more J-J cards. N2-level vocabulary and expressions. TV 60%, Manga 65%, Novels 50%. ~2,100 kanji.</div>
+    </div>
+  </div>
+  <div class="note-box">
+    <strong>Key insight:</strong> Kaishi and Jalup Beginner are <strong>complementary</strong>, not redundant.
+    Kaishi gives you the vocabulary foundation Jalup Beginner deliberately skips; Jalup Beginner gives you the grammar
+    foundation Kaishi completely lacks. Running them in parallel (or overlapping) is the optimal approach.
+    <br><br>
+    <strong>Full path:</strong> The complete Jalup series (Beginner → Champion) spans 7,000 cards and aims for ~2,500+ kanji
+    and ~10,000 vocabulary. Advanced/Expert/Hero are <em>easier</em> than Intermediate because by then you're comfortable
+    with J-J definitions. Many learners switch to sentence mining after Intermediate — both paths are valid.
+  </div>
+</div>
+
+<!-- CURRENT STUDY STATS -->
+<div class="section">
+  <div class="section-title" style="display: flex; justify-content: space-between; align-items: center;">
+  <span><span class="icon icon-prof">📈</span> Your Current Study Stats <span id="statsDate" style="color: var(--text-faint); font-size: 0.78rem;">(Aug 3, 2026)</span></span>
+  <button id="editStatsBtn" style="background: var(--card); border: 1px solid var(--border); color: var(--text-dim); border-radius: 6px; padding: 4px 14px; font-size: 0.75rem; cursor: pointer;">Edit Stats</button>
+</div>
+  <div class="stats-grid">
+    <div class="stat-mini">
+      <div class="stat-label">WaniKani Level</div>
+      <div class="stat-value" style="color: var(--accent-light);" id="stat-wk-level">Level 3</div>
+      <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 4px; line-height: 1.4;" id="stat-wk-detail">~60 kanji learned<br>10–15 lessons weekdays · Weekends: reviews</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-wk-bar" style="width: 75%; background: var(--accent-light);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Bunpro N5 Grammar</div>
+      <div class="stat-value" style="color: var(--cyan);" id="stat-bpg-value">47 / 132</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-bpg-detail">36% complete · ~85 grammar points remaining</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-bpg-bar" style="width: 36%; background: var(--cyan);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Bunpro N4 Grammar</div>
+      <div class="stat-value" style="color: var(--yellow);" id="stat-bpg4-value">0 / 97</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-bpg4-detail">0% complete · 97 grammar points remaining</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-bpg4-bar" style="width: 0%; background: var(--yellow);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Bunpro N3 Grammar</div>
+      <div class="stat-value" style="color: var(--orange);" id="stat-bpg3-value">0 / 89</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-bpg3-detail">0% complete · 89 grammar points remaining</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-bpg3-bar" style="width: 0%; background: var(--orange);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Bunpro N2 Grammar</div>
+      <div class="stat-value" style="color: var(--red);" id="stat-bpg2-value">0 / 110</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-bpg2-detail">0% complete · 110 grammar points remaining</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-bpg2-bar" style="width: 0%; background: var(--red);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Bunpro N1 Grammar</div>
+      <div class="stat-value" style="color: var(--accent-light);" id="stat-bpg1-value">0 / 105</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-bpg1-detail">0% complete · 105 grammar points remaining</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-bpg1-bar" style="width: 0%; background: var(--accent-light);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Kaishi 1.5k</div>
+      <div class="stat-value" style="color: var(--green);" id="stat-kaishi-value">~209 / 1,500</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-kaishi-detail">~14% complete · ~1,291 cards remaining · 10 new cards/day</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-kaishi-bar" style="width: 14%; background: var(--green);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Jalup Beginner</div>
+      <div class="stat-value" style="color: var(--cyan);" id="stat-jb-value">0 / 1,000</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-jb-detail">0% complete · 1,000 cards remaining · J-E sentences</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-jb-bar" style="width: 0%; background: var(--cyan);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Jalup Intermediate</div>
+      <div class="stat-value" style="color: var(--yellow);" id="stat-ji-value">0 / 1,000</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-ji-detail">0% complete · 1,000 cards remaining · J-J transition</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-ji-bar" style="width: 0%; background: var(--yellow);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Jalup Advanced</div>
+      <div class="stat-value" style="color: var(--orange);" id="stat-ja-value">0 / 1,000</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-ja-detail">0% complete · 1,000 cards remaining · N3–N2 expansion</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-ja-bar" style="width: 0%; background: var(--orange);"></div></div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Jalup Expert + Hero</div>
+      <div class="stat-value" style="color: var(--accent-light);" id="stat-jeh-value">0 / 2,000</div>
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;" id="stat-jeh-detail">0% complete · 2,000 cards remaining · N2-level mastery</div>
+      <div class="stat-bar"><div class="stat-bar-fill" id="stat-jeh-bar" style="width: 0%; background: var(--accent-light);"></div></div>
+    </div>
+  </div>
+  <div class="note-box">
+    <strong>WaniKani Level 3:</strong> At your current pace, you'll hit Level 10 (300 kanji) in roughly 7 weeks, and Level 13 (~480 kanji, ~jouyou kanji for N3) in about 10 weeks. This aligns well with starting Jalup Beginner around the time you hit Level 4.
+    <br><br>
+    <strong>Lesson schedule:</strong> 10–15 lessons on weekdays, reviews only on weekends. This is a solid pace — at ~12.5 lessons/day average, you'll clear each level's ~50–60 lessons in about a week. Keep an eye on your review pile; if it exceeds ~150/day, reduce new lessons temporarily.
+    <br><br>
+    <strong>Bunpro overlap:</strong> Jalup Beginner covers the same N5–N4 grammar as Bunpro. Once you start Jalup Beginner (Phase 2), consider pausing Bunpro grammar to avoid redundancy — or keep it as a supplementary review at reduced pace (1 pt/5 vocab per day → 1 pt every 2 days). For Bunpro vocab, the N5 set overlaps heavily with Kaishi, so you can safely deprioritize it.
+  </div>
+</div>
+
+<!-- TIME TRACKING -->
+<div class="section">
+  <div class="section-title"><span class="icon icon-prof">⏱️</span> Time Tracker</div>
+  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
+    <span class="badge badge-green" id="tracker-entries-badge">192 entries</span>
+    <span class="badge badge-orange" id="tracker-total-badge">Total: 28.0h (20 days)</span>
+    <button id="exportBtn" style="background: var(--card); border: 1px solid var(--border); color: var(--text-dim); border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; cursor: pointer;">Export JSON</button>
+    <button id="importBtn" style="background: var(--card); border: 1px solid var(--border); color: var(--text-dim); border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; cursor: pointer;">Import JSON</button>
+    <input type="file" id="importFile" accept=".json" style="display: none;">
+    <button id="resetBtn" style="background: var(--card); border: 1px solid var(--border); color: var(--red); border-radius: 6px; padding: 4px 12px; font-size: 0.75rem; cursor: pointer;">Reset to Imported</button>
+  </div>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+    <div class="range-bar">
+      <button class="range-btn active" data-range="all" onclick="setRange('all')">All-Time</button>
+      <button class="range-btn" data-range="year" onclick="setRange('year')">Yearly</button>
+      <button class="range-btn" data-range="month" onclick="setRange('month')">Monthly</button>
+      <button class="range-btn" data-range="week" onclick="setRange('week')">Weekly</button>
+      <button class="range-btn" data-range="day" onclick="setRange('day')">Today</button>
+      <span id="periodNav" style="display:none; align-items:center; gap:4px; margin-left:8px; position: relative;">
+        <button class="range-btn" onclick="shiftPeriod(-1)">← Prev</button>
+        <span id="periodLabel" style="font-size:0.75rem; color:var(--text-dim); min-width:100px; text-align:center; cursor:pointer; text-decoration:underline; text-decoration-style:dotted; text-underline-offset:3px;" onclick="openPeriodPicker()" title="Click to pick a date"></span>
+        <button class="range-btn" onclick="shiftPeriod(1)">Next →</button>
+        <input type="date" id="periodDatePicker" style="position:absolute; left:50%; top:100%; opacity:0; pointer-events:none; width:1px; height:1px;">
+      </span>
+    </div>
+    <div class="chart-toggle">
+      <button class="active" data-chart="both" onclick="setChartMode('both')">Both</button>
+      <button data-chart="pie" onclick="setChartMode('pie')">Pie</button>
+      <button data-chart="bar" onclick="setChartMode('bar')">Graph</button>
+    </div>
+  </div>
+  <div class="stats-grid" style="margin-bottom: 20px;">
+    <div class="stat-mini">
+      <div class="stat-label">Total Tracked</div>
+      <div class="stat-value" style="color: var(--green);" id="stat-total">28.0h</div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Daily Average</div>
+      <div class="stat-value" style="color: var(--cyan);" id="stat-avg">1.4h</div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Top Resource</div>
+      <div class="stat-value" style="color: var(--orange); font-size: 0.9rem;" id="stat-top">Bunpro Vocab</div>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-label">Active Days</div>
+      <div class="stat-value" style="color: var(--accent-light);" id="stat-days">20</div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 20px;">
+    <div id="pieChartCol" style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px;">
+      <h4 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-dim);">Time by Resource</h4>
+      <div style="position: relative; height: 240px;"><canvas id="pieChart"></canvas></div>
+      <div id="pieLegend" style="margin-top: 12px; font-size: 0.78rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4px;"></div>
+    </div>
+    <div id="barChartCol" style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px;">
+      <h4 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-dim);">Daily Time by Resource (minutes)</h4>
+      <div style="position: relative; height: 240px;"><canvas id="barChart"></canvas></div>
+    </div>
+  </div>
+
+  <div style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+    <div>
+      <div style="font-size: 0.72rem; color: var(--text-faint); margin-bottom: 4px;">Built-in Timer</div>
+      <div class="timer-display" id="timerDisplay">00:00</div>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button class="timer-btn start" id="timerStartBtn" onclick="timerStart()">Start</button>
+      <button class="timer-btn pause" id="timerPauseBtn" onclick="timerPause()" style="display:none;">Pause</button>
+      <button class="timer-btn stop" id="timerStopBtn" onclick="timerStop()" style="display:none;">Stop &amp; Fill</button>
+      <button class="timer-btn" id="timerResetBtn" onclick="timerReset()" style="display:none;">Reset</button>
+    </div>
+    <span style="font-size: 0.72rem; color: var(--text-faint);">Start the timer, study, then click Stop to auto-fill the minutes field below.</span>
+  </div>
+  <div style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 20px;">
+    <h4 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-dim);">Log a Study Session</h4>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: end;">
+      <div>
+        <label style="font-size: 0.72rem; color: var(--text-faint); display: block; margin-bottom: 3px;">Date</label>
+        <input type="date" id="entryDate" style="background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 10px; font-size: 0.82rem;">
+      </div>
+      <div>
+        <label style="font-size: 0.72rem; color: var(--text-faint); display: block; margin-bottom: 3px;">Resource</label>
+        <select id="entryResource" style="background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 10px; font-size: 0.82rem;"></select>
+      </div>
+      <div>
+        <label style="font-size: 0.72rem; color: var(--text-faint); display: block; margin-bottom: 3px;">Minutes</label>
+        <input type="number" id="entryMinutes" min="1" max="600" value="15" style="background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 10px; font-size: 0.82rem; width: 70px;">
+      </div>
+      <div style="display: flex; gap: 4px;">
+        <button class="quick-add" data-min="10" style="background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 4px; padding: 6px 8px; font-size: 0.72rem; cursor: pointer;">10m</button>
+        <button class="quick-add" data-min="15" style="background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 4px; padding: 6px 8px; font-size: 0.72rem; cursor: pointer;">15m</button>
+        <button class="quick-add" data-min="25" style="background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 4px; padding: 6px 8px; font-size: 0.72rem; cursor: pointer;">25m</button>
+        <button class="quick-add" data-min="30" style="background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 4px; padding: 6px 8px; font-size: 0.72rem; cursor: pointer;">30m</button>
+        <button class="quick-add" data-min="45" style="background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 4px; padding: 6px 8px; font-size: 0.72rem; cursor: pointer;">45m</button>
+        <button class="quick-add" data-min="60" style="background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 4px; padding: 6px 8px; font-size: 0.72rem; cursor: pointer;">60m</button>
+      </div>
+      <div>
+        <label style="font-size: 0.72rem; color: var(--text-faint); display: block; margin-bottom: 3px;">Note (optional)</label>
+        <input type="text" id="entryNote" placeholder="e.g. Kaishi cards 210-220" style="background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 10px; font-size: 0.82rem; width: 180px;">
+      </div>
+      <button id="addEntryBtn" style="background: var(--accent); border: none; color: white; border-radius: 6px; padding: 8px 18px; font-size: 0.82rem; cursor: pointer; font-weight: 600;">Add</button>
+    </div>
+  </div>
+
+  <div style="background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+      <h4 style="font-size: 0.9rem; color: var(--text-dim);">All Entries <span id="entryCount" style="color: var(--text-faint); font-size: 0.78rem;">(192)</span></h4>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <select id="filterResource" style="background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 4px 8px; font-size: 0.75rem;"></select>
+        <button id="manageCategoriesBtn" style="background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer;">Categories</button>
+        <button id="toggleEntries" style="background: var(--bg); border: 1px solid var(--border); color: var(--text-dim); border-radius: 6px; padding: 4px 10px; font-size: 0.75rem; cursor: pointer;">Show Recent</button>
+      </div>
+    </div>
+    <div id="entryList" style="max-height: 350px; overflow-y: auto;"></div>
+  </div>
+
+  <div class="note-box" style="margin-top: 16px;">
+    <strong>Built-in tracker:</strong> All 192 entries were imported from your Toggl Track account on Aug 3, 2026. This is now a standalone tracker — add, edit, or delete any entry directly here. No Toggl account needed going forward.
+    <br><br>
+    <strong>Quick-add buttons:</strong> Use 10m/15m/25m/30m/45m/60m to quickly set the minutes field before clicking Add.
+    <br><br>
+    <strong>Export/Import:</strong> Export all entries as JSON for backup. Import to restore from a previous export. Use "Reset to Imported" to restore the original 192 imported entries (clears any changes).
+    <br><br>
+    <strong>Persistence:</strong> Entries are saved in your browser. On the published site (outside the preview iframe), entries persist across page reloads.
+  </div>
+</div>
+
+<!-- ADVANCED/EXPERT/HERO ADVISABILITY -->
+<div class="section">
+  <div class="section-title"><span class="icon icon-plan">🧭</span> Continuing to Jalup Advanced, Expert & Hero: Is It Advisable?</div>
+  <div class="cards-grid">
+    <div class="stat-card" style="border-left: 3px solid var(--orange);">
+      <div class="label">Jalup Advanced (Deck 3)</div>
+      <div class="value" style="color: var(--orange);">1,000 cards · N3–N2</div>
+      <div class="detail">
+        <strong>Verdict: Yes, advisable.</strong> Expands vocabulary to ~3,000 words total. By this point, J-J definitions feel natural.
+        Advanced is reportedly <em>easier</em> than Intermediate because you're already comfortable with monolingual cards.
+        Expected comprehension: Japanese TV 35%, Manga 40%, Novels 25%. ~2,000 kanji.
+      </div>
+    </div>
+    <div class="stat-card" style="border-left: 3px solid var(--accent);">
+      <div class="label">Jalup Expert (Deck 4)</div>
+      <div class="value" style="color: var(--accent-light);">1,000 cards · N2</div>
+      <div class="detail">
+        <strong>Verdict: Yes, if you enjoy the structured approach.</strong> Brings total to ~4,000 sentences. More natural expressions,
+        idiom patterns, and formal register. Expected comprehension: Japanese TV 60%, Manga 65%, Novels 50%. ~2,100 kanji.
+        At this stage, immersion should overtake study time.
+      </div>
+    </div>
+    <div class="stat-card" style="border-left: 3px solid var(--accent);">
+      <div class="label">Jalup Hero (Deck 5)</div>
+      <div class="value" style="color: var(--accent-light);">1,000 cards · N2+</div>
+      <div class="detail">
+        <strong>Verdict: Optional but beneficial.</strong> Completes the core 5,000-card series. By the end, you should handle
+        most conversations, write long passages, and understand ~60% of TV/manga. This is roughly JLPT N2 equivalent.
+        ~2,250 kanji total. Many learners stop here and go full immersion.
+      </div>
+    </div>
+    <div class="stat-card" style="border-left: 3px solid var(--accent-light);">
+      <div class="label">Jalup Master + Champion (Decks 6–7)</div>
+      <div class="value" style="color: var(--accent-light);">2,000 cards · N1</div>
+      <div class="detail">
+        <strong>Verdict: Consider later.</strong> Themed around popular manga (One Piece, Dragon Ball, Death Note, Fullmetal Alchemist).
+        Only available as Anki decks (not in the iOS app). Target: ~2,500+ kanji, 10,000+ vocab, near-fluent comprehension.
+        Decide whether to continue or switch to pure sentence mining after Hero.
+      </div>
+    </div>
+  </div>
+  <div class="note-box">
+    <strong>Overall recommendation:</strong> Yes, continuing through Advanced and Expert is advisable. Here's why:
+    <br><br>
+    <strong>1. Advanced is easier than Intermediate.</strong> The J-J learning curve flattens after Intermediate.
+    If you can survive Intermediate, Advanced feels like a natural continuation, not a step up in difficulty
+    (<a href="https://www.reddit.com/r/LearnJapanese/comments/hfm4ul/jalup_vs_the_tango_series/" target="_blank" style="color: var(--accent-light);">Reddit reviews</a>).
+    <br><br>
+    <strong>2. Structured vocabulary expansion.</strong> Advanced+ adds ~3,000 more words in i+1 order.
+    This is more efficient than random sentence mining at the N3–N2 level, where native content has too many unknowns per sentence.
+    <br><br>
+    <strong>3. Grammar is front-loaded.</strong> Most grammar is taught in Beginner. Advanced+ focuses on vocabulary,
+    expressions, and reading speed — the exact skills you need for your goal of playing games and watching anime in Japanese.
+    <br><br>
+    <strong>4. The level guide confirms the path.</strong> Jalup's own proficiency scale places Advanced at ~1.5 years (Proficient),
+    Expert/Hero at ~2 years (Advanced), and full completion at ~3 years (Work Capable)
+    (<a href="https://japaneselevelup.com/what-level-are-you/" target="_blank" style="color: var(--accent-light);">Japanese Level Up</a>).
+    <br><br>
+    <strong>When to stop and switch to mining:</strong> After completing Intermediate, you have enough foundation to start sentence mining
+    from native content. Many learners do this instead of continuing to Advanced — both paths work. The optimal approach is a
+    <strong>hybrid</strong>: continue Jalup Advanced at 5 cards/day while increasing immersion mining. By Expert/Hero, shift to
+    80% immersion / 20% SRS. After Hero, transition fully to sentence mining and native content.
+  </div>
+</div>
+
+<!-- RECOMMENDED RESOURCES -->
+<div class="section">
+  <div class="section-title"><span class="icon icon-plan">🛠️</span> Recommended Resources</div>
+  <div class="resource-grid">
+    <div class="resource-card" style="border-top: 2px solid var(--cyan);">
+      <div class="r-title">Jalup Beginner (Nihongo Lessons)</div>
+      <div class="r-type">App/Anki · ~$50 or $5/mo</div>
+      <div class="r-desc">1,000 i+1 sentence cards covering all Genki I+II grammar. Available on iOS (Nihongo Lessons app) or as Anki decks via Jalup Discord. The direct bridge between Kaishi and Jalup Intermediate.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--cyan);">
+      <div class="r-title">Tae Kim's Grammar Guide</div>
+      <div class="r-type">Free · Grammar Reference</div>
+      <div class="r-desc">Standard free grammar reference. Covers N5–N4 (some N3). Use alongside Jalup Beginner when a grammar point needs more explanation — Jalup teaches inductively, so a reference is valuable.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--cyan);">
+      <div class="r-title">Cure Dolly (YouTube)</div>
+      <div class="r-type">Free · Grammar Video</div>
+      <div class="r-desc">"Organic Japanese" grammar video series. Explains the "why" behind particles and conjugations. Watch 1–2 videos/week alongside Jalup Beginner for deeper understanding.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--yellow);">
+      <div class="r-title">AIAIJ Textbook</div>
+      <div class="r-type">Textbook · ~$45</div>
+      <div class="r-desc">An Integrated Approach to Intermediate Japanese. The textbook Jalup Intermediate's grammar is based on. 7 chapters, ~150 N4–N3 grammar points. Study in Phase 3 before or alongside Jalup Intermediate.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--yellow);">
+      <div class="r-title">Quartet I &amp; II</div>
+      <div class="r-type">Textbook · ~$45 each</div>
+      <div class="r-desc">Modern successor to AIAIJ. Quartet I covers N3, II covers N2. Consider if you prefer a newer textbook with better readings sourced from real books and articles.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--yellow);">
+      <div class="r-title">Bunpro N3 Grammar</div>
+      <div class="r-type">SRS · $3–5/mo</div>
+      <div class="r-desc">You're already using Bunpro. Their AIAIJ deck has 150 grammar items that directly mirror Jalup Intermediate. Study 1 point/day in Phase 3–4 for parallel reinforcement.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--yellow);">
+      <div class="r-title">A Dictionary of Basic/Intermediate Grammar</div>
+      <div class="r-type">Reference · ~$45 each</div>
+      <div class="r-desc">Most comprehensive English-language Japanese grammar reference. Basic = N5–N4, Intermediate = N3. Use as reference when grammar points feel unclear, not cover-to-cover.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--green);">
+      <div class="r-title">Tadoku Graded Readers</div>
+      <div class="r-type">Free + Paid · Reading</div>
+      <div class="r-desc">Free levels 0–7 at tadoku.org. Start Level 0–1 alongside Kaishi, Level 2–3 alongside Jalup Beginner, Level 4 before Jalup Intermediate. Essential for reading speed and pattern recognition.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--green);">
+      <div class="r-title">Satori Reader</div>
+      <div class="r-type">Subscription · ~$9/mo</div>
+      <div class="r-desc">N4–N3 Japanese stories with built-in grammar notes, furigana toggle, and audio. Perfect bridge between graded readers and native content. Start in Phase 3.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--green);">
+      <div class="r-title">NHK News Web Easy</div>
+      <div class="r-type">Free · Reading</div>
+      <div class="r-desc">Simplified news articles with furigana and audio. N4-level. 1 article/week starting Phase 2. Great for encountering N3 grammar in real-world context.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--green);">
+      <div class="r-title">Crystal Hunters</div>
+      <div class="r-type">Free/Paid · Manga</div>
+      <div class="r-desc">N4-level manga designed for learners. Controlled vocabulary and grammar. Good transition from graded readers to native manga.</div>
+    </div>
+    <div class="resource-card" style="border-top: 2px solid var(--purple);">
+      <div class="r-title">Yomitan + J-J Dictionary</div>
+      <div class="r-type">Free · Tool</div>
+      <div class="r-desc">Install 大辞林 (Daijirin) or 明鏡国語辞典 (Meikyo) in Yomitan. Start with J-E definitions, gradually switch to J-J. Critical prep for Jalup Intermediate's monolingual format.</div>
+    </div>
+  </div>
+</div>
+
+<!-- KEY TAKEAWAYS -->
+<div class="section">
+  <div class="section-title"><span class="icon icon-gap">🔑</span> Key Takeaways</div>
+  <div class="cards-grid">
+    <div class="stat-card" style="border-left: 3px solid var(--green);">
+      <div class="label">Biggest Strength</div>
+      <div class="value" style="font-size: 1.05rem; color: var(--green);">Kaishi + Beginner = Complementary</div>
+      <div class="detail">
+        Kaishi gives you the vocabulary Jalup Beginner skips. Jalup Beginner gives you the grammar
+        Kaishi lacks. Running them in parallel is the optimal approach — no redundancy.
+      </div>
+    </div>
+    <div class="stat-card" style="border-left: 3px solid var(--cyan);">
+      <div class="label">Biggest Win from Adding Beginner</div>
+      <div class="value" style="font-size: 1.05rem; color: var(--cyan);">Grammar Gap Closes</div>
+      <div class="detail">
+        Jalup Beginner covers all N5–N4 grammar (~130 points) that Kaishi completely lacks.
+        This means you can <strong>pause Bunpro</strong> and learn grammar inductively through
+        sentences — more effective for building intuition.
+      </div>
+    </div>
+    <div class="stat-card" style="border-left: 3px solid var(--red);">
+      <div class="label">Remaining Gap After Beginner</div>
+      <div class="value" style="font-size: 1.05rem; color: var(--red);">J-J Transition + N3 Grammar</div>
+      <div class="detail">
+        After Kaishi + Beginner, you'll have N5–N4 grammar and ~1,700 vocab words.
+        But Jalup Intermediate still requires: (1) ~150 N3 grammar points, (2) J-J dictionary
+        skills, (3) ~1,000 kanji recognition. These need the Phase 3 prep work.
+      </div>
+    </div>
+    <div class="stat-card" style="border-left: 3px solid var(--yellow);">
+      <div class="label">Biggest Bottleneck</div>
+      <div class="value" style="font-size: 1.05rem; color: var(--yellow);">Kanji Volume</div>
+      <div class="detail">
+        You're at ~60 kanji (WaniKani Lv.2). Jalup Beginner assumes ~1,000. This is the longest
+        ramp and needs dedicated focus. Prioritize WaniKani or add a kanji-specific deck.
+      </div>
+    </div>
+  </div>
+
+  <div class="note-box" style="margin-top: 20px;">
+    <strong>Bottom line:</strong> Adding Jalup Beginner to your path is a smart move. It fills the grammar gap
+    that Kaishi has, and it's the direct prerequisite for Jalup Intermediate. Start Jalup Beginner when you're
+    ~75% through Kaishi (around ~1,125 cards done, ~375 remaining), run both in parallel for ~3 months, then do the Phase 3
+    J-J prep work before entering Jalup Intermediate. Expect ~7–8 months from now to be ready for Intermediate.
+    Continuing to Advanced/Expert/Hero is advisable — see the full-path analysis above.
+  </div>
+</div>
+
+</div>
+
+
+
+<!-- Categories Modal -->
+<div class="cat-modal-overlay" id="catModal">
+  <div class="cat-modal">
+    <h3>Manage Categories</h3>
+    <div class="cat-list" id="catList"></div>
+    <div class="cat-add-row">
+      <input type="color" id="newCatColor" value="#60a5fa" title="Pick a color">
+      <input type="text" id="newCatName" placeholder="New category name" style="background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 6px; padding: 6px 8px; font-size: 0.82rem; flex: 1;">
+      <button id="addCatBtn" style="background: var(--accent); border: none; color: white; border-radius: 6px; padding: 6px 14px; font-size: 0.82rem; cursor: pointer; font-weight: 600;">Add</button>
+    </div>
+    <div class="cat-modal-actions">
+      <button class="btn-save" id="saveCatBtn">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Stats Modal -->
+<div class="stats-modal-overlay" id="statsModal">
+  <div class="stats-modal">
+    <h3>Update Your Study Stats</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div class="stats-modal-field">
+        <label>WaniKani Level</label>
+        <input type="number" id="modal-wkLevel" min="1" max="60">
+      </div>
+      <div class="stats-modal-field">
+        <label>Kanji Learned</label>
+        <input type="number" id="modal-wkKanji" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Lessons per Weekday (e.g. 10-15)</label>
+        <input type="text" id="modal-wkLessons" placeholder="10-15">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro Grammar: Studied</label>
+        <input type="number" id="modal-bpgDone" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro Grammar: Total</label>
+        <input type="number" id="modal-bpgTotal" min="1">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro N4 Grammar: Studied</label>
+        <input type="number" id="modal-bpg4Done" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro N4 Grammar: Total</label>
+        <input type="number" id="modal-bpg4Total" min="1">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro N3 Grammar: Studied</label>
+        <input type="number" id="modal-bpg3Done" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro N3 Grammar: Total</label>
+        <input type="number" id="modal-bpg3Total" min="1">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro N2 Grammar: Studied</label>
+        <input type="number" id="modal-bpg2Done" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro N2 Grammar: Total</label>
+        <input type="number" id="modal-bpg2Total" min="1">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro N1 Grammar: Studied</label>
+        <input type="number" id="modal-bpg1Done" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Bunpro N1 Grammar: Total</label>
+        <input type="number" id="modal-bpg1Total" min="1">
+      </div>
+      <div class="stats-modal-field">
+        <label>Kaishi: Cards Done</label>
+        <input type="number" id="modal-kDone" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Kaishi: Total Cards</label>
+        <input type="number" id="modal-kTotal" min="1">
+      </div>
+      <div class="stats-modal-field">
+        <label>Kaishi: New Cards per Day</label>
+        <input type="number" id="modal-kPerDay" min="1">
+      </div>
+      <div class="stats-modal-field">
+        <label>Jalup Beginner: Cards Done</label>
+        <input type="number" id="modal-jbDone" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Jalup Intermediate: Cards Done</label>
+        <input type="number" id="modal-jiDone" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Jalup Advanced: Cards Done</label>
+        <input type="number" id="modal-jaDone" min="0">
+      </div>
+      <div class="stats-modal-field">
+        <label>Jalup Expert + Hero: Cards Done</label>
+        <input type="number" id="modal-jehDone" min="0">
+      </div>
+    </div>
+    <div class="stats-modal-actions">
+      <button class="btn-save" id="saveStatsBtn">Save Stats</button>
+      <button class="btn-cancel" id="closeStatsBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// Level & Step Management
+const LEVEL_KEY = 'jp-study-level-v1';
+const STEP_KEY = 'jp-study-step-v1';
+
+function loadLevel() {
+  if (_ls) {
+    try {
+      const v = _ls.getItem(LEVEL_KEY);
+      if (v) return v;
+    } catch(e) {}
+  }
+  return 'N5 (Beginner)';
+}
+
+function saveLevel(level) {
+  if (_ls) {
+    try { _ls.setItem(LEVEL_KEY, level); } catch(e) {}
+  }
+  sbSyncAppData('study_level', level);
+}
+
+function loadStep() {
+  if (_ls) {
+    try {
+      const v = _ls.getItem(STEP_KEY);
+      if (v) return parseInt(v);
+    } catch(e) {}
+  }
+  return 1;
+}
+
+function saveStep(step) {
+  if (_ls) {
+    try { _ls.setItem(STEP_KEY, String(step)); } catch(e) {}
+  }
+  sbSyncAppData('study_step', step);
+}
+
+const STEP_COLORS = {
+  1: 'green', 2: 'cyan', 3: 'yellow', 4: 'orange', 5: 'accent'
+};
+const STEP_LABELS = {
+  1: 'Current', 2: 'Bridge', 3: 'J-J Transition', 4: 'Expansion', 5: 'Mastery'
+};
+
+function applyStep() {
+  const current = loadStep();
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById('step-' + i);
+    const numEl = document.getElementById('step-num-' + i);
+    if (!el || !numEl) continue;
+    el.classList.remove('completed', 'current-step');
+    if (i < current) {
+      el.classList.add('completed');
+      numEl.textContent = 'Step ' + i + ' · Done';
+    } else if (i === current) {
+      el.classList.add('current-step');
+      numEl.textContent = 'Step ' + i + ' · Current';
+    } else {
+      numEl.textContent = 'Step ' + i + ' · ' + STEP_LABELS[i];
+    }
+  }
+}
+
+function setCurrentStep(step) {
+  saveStep(step);
+  applyStep();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Level selector
+  const levelSel = document.getElementById('levelSelector');
+  levelSel.value = loadLevel();
+  levelSel.addEventListener('change', () => {
+    saveLevel(levelSel.value);
+  });
+  
+  // Study path steps
+  applyStep();
+});
+</script>
+
+<script>
+// Study Stats Management
+const STATS_KEY = 'jp-study-stats-v1';
+const DEFAULT_STATS = {
+  wkLevel: 3, wkKanji: 60, wkLessons: '10-15',
+  bpgDone: 47, bpgTotal: 132,
+  bpg4Done: 0, bpg4Total: 97,
+  bpg3Done: 0, bpg3Total: 89,
+  bpg2Done: 0, bpg2Total: 110,
+  bpg1Done: 0, bpg1Total: 105,
+  kDone: 209, kTotal: 1500, kPerDay: 10,
+  jbDone: 0, jbTotal: 1000,
+  jiDone: 0, jiTotal: 1000,
+  jaDone: 0, jaTotal: 1000,
+  jehDone: 0, jehTotal: 2000
+};
+
+let _statsLs = null;
+try { _statsLs = window['local' + 'Storage']; } catch(e) { _statsLs = null; }
+
+function loadStats() {
+  if (_statsLs) {
+    try {
+      const stored = _statsLs.getItem(STATS_KEY);
+      if (stored) return Object.assign({}, DEFAULT_STATS, JSON.parse(stored));
+    } catch(e) {}
+  }
+  return Object.assign({}, DEFAULT_STATS);
+}
+
+function saveStats(stats) {
+  if (_statsLs) {
+    try { _statsLs.setItem(STATS_KEY, JSON.stringify(stats)); } catch(e) {}
+  }
+  sbSyncAppData('study_stats', stats);
+}
+
+function fmt(n) { return n.toLocaleString(); }
+
+function applyStats() {
+  const s = loadStats();
+  
+  // WaniKani
+  const wkPct = Math.min(100, (s.wkLevel / 60 * 100));
+  document.getElementById('stat-wk-level').textContent = 'Level ' + s.wkLevel;
+  document.getElementById('stat-wk-detail').innerHTML = `~${s.wkKanji} kanji learned<br>${s.wkLessons} lessons weekdays · Weekends: reviews`;
+  document.getElementById('stat-wk-bar').style.width = wkPct + '%';
+  document.getElementById('badge-wk').textContent = `WaniKani: Level ${s.wkLevel} · ${s.wkLessons} lessons/weekday`;
+
+  // Bunpro Grammar
+  const bpgPct = Math.round(s.bpgDone / s.bpgTotal * 100);
+  const bpgRem = s.bpgTotal - s.bpgDone;
+  document.getElementById('stat-bpg-value').textContent = `${s.bpgDone} / ${s.bpgTotal}`;
+  document.getElementById('stat-bpg-detail').textContent = `${bpgPct}% complete · ~${bpgRem} grammar points remaining`;
+  document.getElementById('stat-bpg-bar').style.width = bpgPct + '%';
+  document.getElementById('badge-bp-grammar').textContent = `Bunpro N5 Grammar: ${s.bpgDone}/${s.bpgTotal}`;
+
+
+  // Bunpro N4 Grammar
+  const bpg4Pct = Math.round(s.bpg4Done / s.bpg4Total * 100);
+  const bpg4Rem = s.bpg4Total - s.bpg4Done;
+  document.getElementById('stat-bpg4-value').textContent = `${s.bpg4Done} / ${s.bpg4Total}`;
+  document.getElementById('stat-bpg4-detail').textContent = `${bpg4Pct}% complete · ${bpg4Rem} grammar points remaining`;
+  document.getElementById('stat-bpg4-bar').style.width = bpg4Pct + '%';
+  document.getElementById('badge-bpg-n4').textContent = `Bunpro N4 Grammar: ${s.bpg4Done}/${s.bpg4Total}`;
+
+  // Bunpro N3 Grammar
+  const bpg3Pct = Math.round(s.bpg3Done / s.bpg3Total * 100);
+  const bpg3Rem = s.bpg3Total - s.bpg3Done;
+  document.getElementById('stat-bpg3-value').textContent = `${s.bpg3Done} / ${s.bpg3Total}`;
+  document.getElementById('stat-bpg3-detail').textContent = `${bpg3Pct}% complete · ${bpg3Rem} grammar points remaining`;
+  document.getElementById('stat-bpg3-bar').style.width = bpg3Pct + '%';
+  document.getElementById('badge-bpg-n3').textContent = `Bunpro N3 Grammar: ${s.bpg3Done}/${s.bpg3Total}`;
+
+  // Bunpro N2 Grammar
+  const bpg2Pct = Math.round(s.bpg2Done / s.bpg2Total * 100);
+  const bpg2Rem = s.bpg2Total - s.bpg2Done;
+  document.getElementById('stat-bpg2-value').textContent = `${s.bpg2Done} / ${s.bpg2Total}`;
+  document.getElementById('stat-bpg2-detail').textContent = `${bpg2Pct}% complete · ${bpg2Rem} grammar points remaining`;
+  document.getElementById('stat-bpg2-bar').style.width = bpg2Pct + '%';
+  document.getElementById('badge-bpg-n2').textContent = `Bunpro N2 Grammar: ${s.bpg2Done}/${s.bpg2Total}`;
+
+  // Bunpro N1 Grammar
+  const bpg1Pct = Math.round(s.bpg1Done / s.bpg1Total * 100);
+  const bpg1Rem = s.bpg1Total - s.bpg1Done;
+  document.getElementById('stat-bpg1-value').textContent = `${s.bpg1Done} / ${s.bpg1Total}`;
+  document.getElementById('stat-bpg1-detail').textContent = `${bpg1Pct}% complete · ${bpg1Rem} grammar points remaining`;
+  document.getElementById('stat-bpg1-bar').style.width = bpg1Pct + '%';
+  document.getElementById('badge-bpg-n1').textContent = `Bunpro N1 Grammar: ${s.bpg1Done}/${s.bpg1Total}`;
+
+  // Kaishi
+  const kPct = Math.round(s.kDone / s.kTotal * 100);
+  const kRem = s.kTotal - s.kDone;
+  document.getElementById('stat-kaishi-value').textContent = `~${s.kDone} / ${fmt(s.kTotal)}`;
+  document.getElementById('stat-kaishi-detail').textContent = `~${kPct}% complete · ~${fmt(kRem)} cards remaining · ${s.kPerDay} new cards/day`;
+  document.getElementById('stat-kaishi-bar').style.width = kPct + '%';
+  document.getElementById('badge-kaishi').textContent = `Kaishi: ~${fmt(kRem)} cards remaining · ${s.kPerDay} new/day`;
+
+  // Jalup Beginner
+  const jbPct = Math.round(s.jbDone / s.jbTotal * 100);
+  const jbRem = s.jbTotal - s.jbDone;
+  document.getElementById('stat-jb-value').textContent = `${fmt(s.jbDone)} / ${fmt(s.jbTotal)}`;
+  document.getElementById('stat-jb-detail').textContent = `${jbPct}% complete · ${fmt(jbRem)} cards remaining · J-E sentences`;
+  document.getElementById('stat-jb-bar').style.width = jbPct + '%';
+  document.getElementById('badge-jb').textContent = `Jalup Beginner: ${fmt(s.jbDone)}/${fmt(s.jbTotal)}`;
+
+  // Jalup Intermediate
+  const jiPct = Math.round(s.jiDone / s.jiTotal * 100);
+  const jiRem = s.jiTotal - s.jiDone;
+  document.getElementById('stat-ji-value').textContent = `${fmt(s.jiDone)} / ${fmt(s.jiTotal)}`;
+  document.getElementById('stat-ji-detail').textContent = `${jiPct}% complete · ${fmt(jiRem)} cards remaining · J-J transition`;
+  document.getElementById('stat-ji-bar').style.width = jiPct + '%';
+  document.getElementById('badge-ji').textContent = `Jalup Intermediate: ${fmt(s.jiDone)}/${fmt(s.jiTotal)}`;
+
+  // Jalup Advanced
+  const jaPct = Math.round(s.jaDone / s.jaTotal * 100);
+  const jaRem = s.jaTotal - s.jaDone;
+  document.getElementById('stat-ja-value').textContent = `${fmt(s.jaDone)} / ${fmt(s.jaTotal)}`;
+  document.getElementById('stat-ja-detail').textContent = `${jaPct}% complete · ${fmt(jaRem)} cards remaining · N3–N2 expansion`;
+  document.getElementById('stat-ja-bar').style.width = jaPct + '%';
+  document.getElementById('badge-ja').textContent = `Jalup Advanced: ${fmt(s.jaDone)}/${fmt(s.jaTotal)}`;
+
+  // Jalup Expert + Hero
+  const jehPct = Math.round(s.jehDone / s.jehTotal * 100);
+  const jehRem = s.jehTotal - s.jehDone;
+  document.getElementById('stat-jeh-value').textContent = `${fmt(s.jehDone)} / ${fmt(s.jehTotal)}`;
+  document.getElementById('stat-jeh-detail').textContent = `${jehPct}% complete · ${fmt(jehRem)} cards remaining · N2-level mastery`;
+  document.getElementById('stat-jeh-bar').style.width = jehPct + '%';
+  document.getElementById('badge-jeh').textContent = `Jalup Expert+Hero: ${fmt(s.jehDone)}/${fmt(s.jehTotal)}`;
+}
+
+function openStatsModal() {
+  const s = loadStats();
+  document.getElementById('modal-wkLevel').value = s.wkLevel;
+  document.getElementById('modal-wkKanji').value = s.wkKanji;
+  document.getElementById('modal-wkLessons').value = s.wkLessons;
+  document.getElementById('modal-bpgDone').value = s.bpgDone;
+  document.getElementById('modal-bpgTotal').value = s.bpgTotal;
+  document.getElementById('modal-bpg4Done').value = s.bpg4Done || 0;
+  document.getElementById('modal-bpg4Total').value = s.bpg4Total || 97;
+  document.getElementById('modal-bpg3Done').value = s.bpg3Done || 0;
+  document.getElementById('modal-bpg3Total').value = s.bpg3Total || 89;
+  document.getElementById('modal-bpg2Done').value = s.bpg2Done || 0;
+  document.getElementById('modal-bpg2Total').value = s.bpg2Total || 110;
+  document.getElementById('modal-bpg1Done').value = s.bpg1Done || 0;
+  document.getElementById('modal-bpg1Total').value = s.bpg1Total || 105;
+  document.getElementById('modal-kDone').value = s.kDone;
+  document.getElementById('modal-kTotal').value = s.kTotal;
+  document.getElementById('modal-kPerDay').value = s.kPerDay;
+  document.getElementById('modal-jbDone').value = s.jbDone || 0;
+  document.getElementById('modal-jiDone').value = s.jiDone || 0;
+  document.getElementById('modal-jaDone').value = s.jaDone || 0;
+  document.getElementById('modal-jehDone').value = s.jehDone || 0;
+  document.getElementById('statsModal').classList.add('active');
+}
+
+function closeStatsModal() {
+  document.getElementById('statsModal').classList.remove('active');
+}
+
+function saveStatsFromModal() {
+  const stats = {
+    wkLevel: parseInt(document.getElementById('modal-wkLevel').value) || DEFAULT_STATS.wkLevel,
+    wkKanji: parseInt(document.getElementById('modal-wkKanji').value) || 0,
+    wkLessons: document.getElementById('modal-wkLessons').value || '10-15',
+    bpgDone: parseInt(document.getElementById('modal-bpgDone').value) || 0,
+    bpgTotal: parseInt(document.getElementById('modal-bpgTotal').value) || 132,
+    bpg4Done: parseInt(document.getElementById('modal-bpg4Done').value) || 0,
+    bpg4Total: parseInt(document.getElementById('modal-bpg4Total').value) || 97,
+    bpg3Done: parseInt(document.getElementById('modal-bpg3Done').value) || 0,
+    bpg3Total: parseInt(document.getElementById('modal-bpg3Total').value) || 89,
+    bpg2Done: parseInt(document.getElementById('modal-bpg2Done').value) || 0,
+    bpg2Total: parseInt(document.getElementById('modal-bpg2Total').value) || 110,
+    bpg1Done: parseInt(document.getElementById('modal-bpg1Done').value) || 0,
+    bpg1Total: parseInt(document.getElementById('modal-bpg1Total').value) || 105,
+    kDone: parseInt(document.getElementById('modal-kDone').value) || 0,
+    kTotal: parseInt(document.getElementById('modal-kTotal').value) || 1500,
+    kPerDay: parseInt(document.getElementById('modal-kPerDay').value) || 10,
+    jbDone: parseInt(document.getElementById('modal-jbDone').value) || 0,
+    jbTotal: 1000,
+    jiDone: parseInt(document.getElementById('modal-jiDone').value) || 0,
+    jiTotal: 1000,
+    jaDone: parseInt(document.getElementById('modal-jaDone').value) || 0,
+    jaTotal: 1000,
+    jehDone: parseInt(document.getElementById('modal-jehDone').value) || 0,
+    jehTotal: 2000,
+  };
+  saveStats(stats);
+  applyStats();
+  closeStatsModal();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  applyStats();
+  document.getElementById('editStatsBtn').addEventListener('click', openStatsModal);
+  document.getElementById('saveStatsBtn').addEventListener('click', saveStatsFromModal);
+  document.getElementById('closeStatsBtn').addEventListener('click', closeStatsModal);
+  document.getElementById('statsModal').addEventListener('click', (e) => {
+    if (e.target.id === 'statsModal') closeStatsModal();
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+// All entries — imported from Toggl on Aug 3, 2026 (192 entries)
+const IMPORTED_ENTRIES = [{"id": 100000, "date": "2026-08-03", "resource": "Podcasts", "minutes": 3.2, "note": "Nihongo con Teppei #6: Do you go to school?", "source": "imported"}, {"id": 100001, "date": "2026-08-03", "resource": "Reading", "minutes": 7.7, "note": "", "source": "imported"}, {"id": 100002, "date": "2026-08-03", "resource": "Kaishi 1.5k", "minutes": 9.1, "note": "", "source": "imported"}, {"id": 100003, "date": "2026-08-03", "resource": "Bunpro Vocab", "minutes": 7.1, "note": "", "source": "imported"}, {"id": 100004, "date": "2026-08-03", "resource": "Bunpro Grammar", "minutes": 5.9, "note": "", "source": "imported"}, {"id": 100005, "date": "2026-08-03", "resource": "WaniKani", "minutes": 5.3, "note": "", "source": "imported"}, {"id": 100006, "date": "2026-08-02", "resource": "Genki Textbook", "minutes": 31.7, "note": "Game Gengo Genki Lesson 4", "source": "imported"}, {"id": 100007, "date": "2026-08-02", "resource": "Immersion (Anime)", "minutes": 16.6, "note": "Chiikawa episode 9", "source": "imported"}, {"id": 100008, "date": "2026-08-02", "resource": "Bunpro Vocab", "minutes": 13.8, "note": "", "source": "imported"}, {"id": 100009, "date": "2026-08-02", "resource": "Kaishi 1.5k", "minutes": 11.3, "note": "", "source": "imported"}, {"id": 100010, "date": "2026-08-02", "resource": "Bunpro Grammar", "minutes": 7.5, "note": "", "source": "imported"}, {"id": 100011, "date": "2026-08-02", "resource": "WaniKani", "minutes": 8.0, "note": "", "source": "imported"}, {"id": 100012, "date": "2026-08-01", "resource": "Immersion (Anime)", "minutes": 10.7, "note": "", "source": "imported"}, {"id": 100013, "date": "2026-08-01", "resource": "Bunpro Vocab", "minutes": 22.3, "note": "", "source": "imported"}, {"id": 100014, "date": "2026-08-01", "resource": "Kaishi 1.5k", "minutes": 9.9, "note": "", "source": "imported"}, {"id": 100015, "date": "2026-08-01", "resource": "Bunpro Grammar", "minutes": 5.1, "note": "", "source": "imported"}, {"id": 100016, "date": "2026-08-01", "resource": "WaniKani", "minutes": 2.8, "note": "", "source": "imported"}, {"id": 100017, "date": "2026-07-31", "resource": "WaniKani", "minutes": 3.9, "note": "", "source": "imported"}, {"id": 100018, "date": "2026-07-31", "resource": "Reading", "minutes": 5.7, "note": "", "source": "imported"}, {"id": 100019, "date": "2026-07-31", "resource": "Podcasts", "minutes": 8.8, "note": "Japanese with Shun Ep: My family", "source": "imported"}, {"id": 100020, "date": "2026-07-31", "resource": "Kaishi 1.5k", "minutes": 17.1, "note": "", "source": "imported"}, {"id": 100021, "date": "2026-07-31", "resource": "Bunpro Grammar", "minutes": 4.1, "note": "", "source": "imported"}, {"id": 100022, "date": "2026-07-31", "resource": "WaniKani", "minutes": 7.5, "note": "", "source": "imported"}, {"id": 100023, "date": "2026-07-30", "resource": "WaniKani", "minutes": 1.0, "note": "", "source": "imported"}, {"id": 100024, "date": "2026-07-30", "resource": "WaniKani", "minutes": 5.2, "note": "", "source": "imported"}, {"id": 100025, "date": "2026-07-30", "resource": "WaniKani", "minutes": 2.7, "note": "", "source": "imported"}, {"id": 100026, "date": "2026-07-30", "resource": "Podcasts", "minutes": 3.9, "note": "Nihongo Con Teppei #55: Hiragana, katakana, kanji", "source": "imported"}, {"id": 100027, "date": "2026-07-30", "resource": "Reading", "minutes": 7.0, "note": "", "source": "imported"}, {"id": 100028, "date": "2026-07-30", "resource": "Bunpro Vocab", "minutes": 17.1, "note": "", "source": "imported"}, {"id": 100029, "date": "2026-07-30", "resource": "Kaishi 1.5k", "minutes": 21.8, "note": "", "source": "imported"}, {"id": 100030, "date": "2026-07-30", "resource": "Bunpro Grammar", "minutes": 2.6, "note": "", "source": "imported"}, {"id": 100031, "date": "2026-07-30", "resource": "WaniKani", "minutes": 8.2, "note": "", "source": "imported"}, {"id": 100032, "date": "2026-07-29", "resource": "Bunpro Grammar", "minutes": 1, "note": "", "source": "imported"}, {"id": 100033, "date": "2026-07-29", "resource": "WaniKani", "minutes": 0.7, "note": "", "source": "imported"}, {"id": 100034, "date": "2026-07-29", "resource": "Bunpro Grammar", "minutes": 1.1, "note": "", "source": "imported"}, {"id": 100035, "date": "2026-07-29", "resource": "WaniKani", "minutes": 3.0, "note": "", "source": "imported"}, {"id": 100036, "date": "2026-07-29", "resource": "Bunpro Vocab", "minutes": 11.6, "note": "Section 2 Unit 13: Describe your house", "source": "imported"}, {"id": 100037, "date": "2026-07-29", "resource": "Kaishi 1.5k", "minutes": 19.7, "note": "", "source": "imported"}, {"id": 100038, "date": "2026-07-29", "resource": "Bunpro Grammar", "minutes": 4.5, "note": "", "source": "imported"}, {"id": 100039, "date": "2026-07-29", "resource": "WaniKani", "minutes": 9.1, "note": "", "source": "imported"}, {"id": 100040, "date": "2026-07-28", "resource": "Bunpro Grammar", "minutes": 0.8, "note": "", "source": "imported"}, {"id": 100041, "date": "2026-07-28", "resource": "WaniKani", "minutes": 1.3, "note": "", "source": "imported"}, {"id": 100042, "date": "2026-07-28", "resource": "Genki Textbook", "minutes": 24.7, "note": "", "source": "imported"}, {"id": 100043, "date": "2026-07-28", "resource": "Bunpro Grammar", "minutes": 1, "note": "", "source": "imported"}, {"id": 100044, "date": "2026-07-28", "resource": "WaniKani", "minutes": 2.2, "note": "", "source": "imported"}, {"id": 100045, "date": "2026-07-28", "resource": "Immersion (Anime)", "minutes": 20.4, "note": "Takagi-san episode 2", "source": "imported"}, {"id": 100046, "date": "2026-07-28", "resource": "Immersion (Anime)", "minutes": 8.9, "note": "Chiikawa episode 7", "source": "imported"}, {"id": 100047, "date": "2026-07-28", "resource": "Reading", "minutes": 7.5, "note": "", "source": "imported"}, {"id": 100048, "date": "2026-07-28", "resource": "Podcasts", "minutes": 9.9, "note": "Japanese with Shun Ep55: My Friends", "source": "imported"}, {"id": 100049, "date": "2026-07-28", "resource": "Bunpro Vocab", "minutes": 11.1, "note": "", "source": "imported"}, {"id": 100050, "date": "2026-07-28", "resource": "Kaishi 1.5k", "minutes": 18.8, "note": "", "source": "imported"}, {"id": 100051, "date": "2026-07-28", "resource": "Bunpro Grammar", "minutes": 3.3, "note": "", "source": "imported"}, {"id": 100052, "date": "2026-07-28", "resource": "WaniKani", "minutes": 7.5, "note": "", "source": "imported"}, {"id": 100053, "date": "2026-07-27", "resource": "WaniKani", "minutes": 1, "note": "", "source": "imported"}, {"id": 100054, "date": "2026-07-27", "resource": "Bunpro Grammar", "minutes": 1.1, "note": "", "source": "imported"}, {"id": 100055, "date": "2026-07-27", "resource": "WaniKani", "minutes": 1.5, "note": "", "source": "imported"}, {"id": 100056, "date": "2026-07-27", "resource": "Immersion (Anime)", "minutes": 11.6, "note": "Chiikawa episode 6", "source": "imported"}, {"id": 100057, "date": "2026-07-27", "resource": "Bunpro Grammar", "minutes": 1.7, "note": "", "source": "imported"}, {"id": 100058, "date": "2026-07-27", "resource": "WaniKani", "minutes": 2.3, "note": "", "source": "imported"}, {"id": 100059, "date": "2026-07-27", "resource": "Reading", "minutes": 8.1, "note": "", "source": "imported"}, {"id": 100060, "date": "2026-07-27", "resource": "Podcasts", "minutes": 4.0, "note": "Nihongo con Teppei #4: What time is it?", "source": "imported"}, {"id": 100061, "date": "2026-07-27", "resource": "Kaishi 1.5k", "minutes": 18.6, "note": "", "source": "imported"}, {"id": 100062, "date": "2026-07-27", "resource": "Bunpro Grammar", "minutes": 4.3, "note": "", "source": "imported"}, {"id": 100063, "date": "2026-07-27", "resource": "WaniKani", "minutes": 6.1, "note": "", "source": "imported"}, {"id": 100064, "date": "2026-07-27", "resource": "Bunpro Vocab", "minutes": 21.2, "note": "", "source": "imported"}, {"id": 100065, "date": "2026-07-26", "resource": "Bunpro Grammar", "minutes": 4.4, "note": "", "source": "imported"}, {"id": 100066, "date": "2026-07-26", "resource": "WaniKani", "minutes": 9.9, "note": "", "source": "imported"}, {"id": 100067, "date": "2026-07-25", "resource": "Immersion (Anime)", "minutes": 13.2, "note": "Chiikawa episode 5", "source": "imported"}, {"id": 100068, "date": "2026-07-25", "resource": "Kaishi 1.5k", "minutes": 13.4, "note": "", "source": "imported"}, {"id": 100069, "date": "2026-07-25", "resource": "Bunpro Grammar", "minutes": 7.0, "note": "", "source": "imported"}, {"id": 100070, "date": "2026-07-25", "resource": "WaniKani", "minutes": 4.7, "note": "", "source": "imported"}, {"id": 100071, "date": "2026-07-25", "resource": "Bunpro Vocab", "minutes": 5.8, "note": "", "source": "imported"}, {"id": 100072, "date": "2026-07-24", "resource": "Immersion (Anime)", "minutes": 16.9, "note": "Chiikawa episode 4", "source": "imported"}, {"id": 100073, "date": "2026-07-24", "resource": "WaniKani", "minutes": 4.8, "note": "", "source": "imported"}, {"id": 100074, "date": "2026-07-24", "resource": "Bunpro Grammar", "minutes": 3.6, "note": "", "source": "imported"}, {"id": 100075, "date": "2026-07-24", "resource": "Bunpro Grammar", "minutes": 1.2, "note": "", "source": "imported"}, {"id": 100076, "date": "2026-07-24", "resource": "WaniKani", "minutes": 4.6, "note": "", "source": "imported"}, {"id": 100077, "date": "2026-07-24", "resource": "Reading", "minutes": 2.2, "note": "", "source": "imported"}, {"id": 100078, "date": "2026-07-24", "resource": "Reading", "minutes": 7.4, "note": "", "source": "imported"}, {"id": 100079, "date": "2026-07-24", "resource": "Podcasts", "minutes": 9.9, "note": "Japanese with Shun Ep4: Homesick", "source": "imported"}, {"id": 100080, "date": "2026-07-24", "resource": "Kaishi 1.5k", "minutes": 14.4, "note": "", "source": "imported"}, {"id": 100081, "date": "2026-07-24", "resource": "Bunpro Grammar", "minutes": 4.5, "note": "", "source": "imported"}, {"id": 100082, "date": "2026-07-24", "resource": "WaniKani", "minutes": 8.1, "note": "", "source": "imported"}, {"id": 100083, "date": "2026-07-24", "resource": "Bunpro Vocab", "minutes": 14.1, "note": "Section Unit 12: Asking for directions, gomibaku", "source": "imported"}, {"id": 100084, "date": "2026-07-23", "resource": "Immersion (Anime)", "minutes": 28.5, "note": "Takagi-san episode 1", "source": "imported"}, {"id": 100085, "date": "2026-07-23", "resource": "WaniKani", "minutes": 2.4, "note": "", "source": "imported"}, {"id": 100086, "date": "2026-07-23", "resource": "Reading", "minutes": 19.6, "note": "Yotsuba: stopped at page 27", "source": "imported"}, {"id": 100087, "date": "2026-07-23", "resource": "Immersion (Anime)", "minutes": 12.6, "note": "Chiikawa episode 3", "source": "imported"}, {"id": 100088, "date": "2026-07-23", "resource": "WaniKani", "minutes": 2.4, "note": "", "source": "imported"}, {"id": 100089, "date": "2026-07-23", "resource": "Bunpro Grammar", "minutes": 1.2, "note": "", "source": "imported"}, {"id": 100090, "date": "2026-07-23", "resource": "WaniKani", "minutes": 2.7, "note": "", "source": "imported"}, {"id": 100091, "date": "2026-07-23", "resource": "Bunpro Grammar", "minutes": 1.3, "note": "", "source": "imported"}, {"id": 100092, "date": "2026-07-23", "resource": "WaniKani", "minutes": 4.8, "note": "", "source": "imported"}, {"id": 100093, "date": "2026-07-23", "resource": "Podcasts", "minutes": 4.0, "note": "Nihongo con Teppei #3: doko ni sundeimasuka?", "source": "imported"}, {"id": 100094, "date": "2026-07-23", "resource": "Bunpro Grammar", "minutes": 1.4, "note": "", "source": "imported"}, {"id": 100095, "date": "2026-07-23", "resource": "Reading", "minutes": 10.7, "note": "", "source": "imported"}, {"id": 100096, "date": "2026-07-23", "resource": "Kaishi 1.5k", "minutes": 15.9, "note": "", "source": "imported"}, {"id": 100097, "date": "2026-07-23", "resource": "Bunpro Grammar", "minutes": 1.5, "note": "", "source": "imported"}, {"id": 100098, "date": "2026-07-23", "resource": "WaniKani", "minutes": 9.3, "note": "", "source": "imported"}, {"id": 100099, "date": "2026-07-23", "resource": "Bunpro Vocab", "minutes": 22.9, "note": "", "source": "imported"}, {"id": 100100, "date": "2026-07-22", "resource": "Genki Textbook", "minutes": 16.3, "note": "Genki Lesson 3: ni particle", "source": "imported"}, {"id": 100101, "date": "2026-07-22", "resource": "WaniKani", "minutes": 2.0, "note": "", "source": "imported"}, {"id": 100102, "date": "2026-07-22", "resource": "Immersion (Anime)", "minutes": 8.5, "note": "Chiikawa episode 2", "source": "imported"}, {"id": 100103, "date": "2026-07-22", "resource": "Bunpro Grammar", "minutes": 1.1, "note": "", "source": "imported"}, {"id": 100104, "date": "2026-07-22", "resource": "WaniKani", "minutes": 2.5, "note": "", "source": "imported"}, {"id": 100105, "date": "2026-07-22", "resource": "Podcasts", "minutes": 6.5, "note": "Japanese with Shun Ep3: Daily routine", "source": "imported"}, {"id": 100106, "date": "2026-07-22", "resource": "Reading", "minutes": 4.0, "note": "Tadoku: Frog (kaeru)", "source": "imported"}, {"id": 100107, "date": "2026-07-22", "resource": "Reading", "minutes": 7.3, "note": "", "source": "imported"}, {"id": 100108, "date": "2026-07-22", "resource": "Bunpro Vocab", "minutes": 15.2, "note": "", "source": "imported"}, {"id": 100109, "date": "2026-07-22", "resource": "Kaishi 1.5k", "minutes": 8.2, "note": "", "source": "imported"}, {"id": 100110, "date": "2026-07-22", "resource": "Bunpro Grammar", "minutes": 2.7, "note": "", "source": "imported"}, {"id": 100111, "date": "2026-07-22", "resource": "WaniKani", "minutes": 13.0, "note": "", "source": "imported"}, {"id": 100112, "date": "2026-07-21", "resource": "Bunpro Grammar", "minutes": 1.5, "note": "", "source": "imported"}, {"id": 100113, "date": "2026-07-21", "resource": "WaniKani", "minutes": 2.7, "note": "", "source": "imported"}, {"id": 100114, "date": "2026-07-21", "resource": "Bunpro Grammar", "minutes": 1.5, "note": "N5 grammer: failed on kono", "source": "imported"}, {"id": 100115, "date": "2026-07-21", "resource": "WaniKani", "minutes": 2.2, "note": "", "source": "imported"}, {"id": 100116, "date": "2026-07-21", "resource": "Genki Textbook", "minutes": 34.1, "note": "Genki Lesson 3: ichidan and godan verbs", "source": "imported"}, {"id": 100117, "date": "2026-07-21", "resource": "WaniKani", "minutes": 1.4, "note": "", "source": "imported"}, {"id": 100118, "date": "2026-07-21", "resource": "Bunpro Grammar", "minutes": 2.0, "note": "N5 grammer: Failed on soko", "source": "imported"}, {"id": 100119, "date": "2026-07-21", "resource": "Reading", "minutes": 5.8, "note": "Tadoku: Fox and crane (tsuru) eating from osara (plate) and tsubo (jar/vase)", "source": "imported"}, {"id": 100120, "date": "2026-07-21", "resource": "Bunpro Grammar", "minutes": 1.1, "note": "N5 grammar: Failed on asoko", "source": "imported"}, {"id": 100121, "date": "2026-07-21", "resource": "Podcasts", "minutes": 4.6, "note": "Nihongo con Teppei Episode 2: How long have you spent studying Japanese?", "source": "imported"}, {"id": 100122, "date": "2026-07-21", "resource": "WaniKani", "minutes": 7.2, "note": "", "source": "imported"}, {"id": 100123, "date": "2026-07-21", "resource": "Reading", "minutes": 7.3, "note": "Shinobi: Zoos, pets", "source": "imported"}, {"id": 100124, "date": "2026-07-21", "resource": "Kaishi 1.5k", "minutes": 9.8, "note": "", "source": "imported"}, {"id": 100125, "date": "2026-07-21", "resource": "Bunpro Grammar", "minutes": 2.4, "note": "", "source": "imported"}, {"id": 100126, "date": "2026-07-21", "resource": "WaniKani", "minutes": 9.8, "note": "", "source": "imported"}, {"id": 100127, "date": "2026-07-21", "resource": "Bunpro Vocab", "minutes": 8.0, "note": "", "source": "imported"}, {"id": 100128, "date": "2026-07-20", "resource": "Podcasts", "minutes": 7.9, "note": "Japanese with Shun Ep2: Hot and cold weather", "source": "imported"}, {"id": 100129, "date": "2026-07-20", "resource": "WaniKani", "minutes": 3.4, "note": "", "source": "imported"}, {"id": 100130, "date": "2026-07-20", "resource": "Bunpro Vocab", "minutes": 14.4, "note": "Section 2 Unit 11: Order pastries", "source": "imported"}, {"id": 100131, "date": "2026-07-20", "resource": "Kaishi 1.5k", "minutes": 5.5, "note": "", "source": "imported"}, {"id": 100132, "date": "2026-07-20", "resource": "Bunpro Grammar", "minutes": 5.2, "note": "", "source": "imported"}, {"id": 100133, "date": "2026-07-20", "resource": "WaniKani", "minutes": 14.2, "note": "", "source": "imported"}, {"id": 100134, "date": "2026-07-19", "resource": "Bunpro Grammar", "minutes": 1.4, "note": "", "source": "imported"}, {"id": 100135, "date": "2026-07-19", "resource": "WaniKani", "minutes": 2.6, "note": "", "source": "imported"}, {"id": 100136, "date": "2026-07-19", "resource": "Bunpro Grammar", "minutes": 5.4, "note": "", "source": "imported"}, {"id": 100137, "date": "2026-07-19", "resource": "WaniKani", "minutes": 2.1, "note": "", "source": "imported"}, {"id": 100138, "date": "2026-07-19", "resource": "Reading", "minutes": 4.1, "note": "", "source": "imported"}, {"id": 100139, "date": "2026-07-19", "resource": "Podcasts", "minutes": 8.6, "note": "Nihongo con Teppei #1: genki desu ka? ni tsu i tei", "source": "imported"}, {"id": 100140, "date": "2026-07-19", "resource": "Immersion (Anime)", "minutes": 31.5, "note": "Wagotabi", "source": "imported"}, {"id": 100141, "date": "2026-07-19", "resource": "Kaishi 1.5k", "minutes": 6.7, "note": "", "source": "imported"}, {"id": 100142, "date": "2026-07-19", "resource": "Bunpro Grammar", "minutes": 11.5, "note": "", "source": "imported"}, {"id": 100143, "date": "2026-07-19", "resource": "WaniKani", "minutes": 7.0, "note": "Kanji: Water, yen, book, katana", "source": "imported"}, {"id": 100144, "date": "2026-07-19", "resource": "Bunpro Vocab", "minutes": 26.3, "note": "Completed Section 2 Unit 10: Order food and drinks", "source": "imported"}, {"id": 100145, "date": "2026-07-18", "resource": "WaniKani", "minutes": 1.5, "note": "", "source": "imported"}, {"id": 100146, "date": "2026-07-18", "resource": "Genki Textbook", "minutes": 91.8, "note": "Genki Lesson 3: ichidan and godan verbs", "source": "imported"}, {"id": 100147, "date": "2026-07-18", "resource": "WaniKani", "minutes": 2.7, "note": "Kanji: failed on 才", "source": "imported"}, {"id": 100148, "date": "2026-07-18", "resource": "WaniKani", "minutes": 1.5, "note": "", "source": "imported"}, {"id": 100149, "date": "2026-07-18", "resource": "Bunpro Grammar", "minutes": 4.7, "note": "N5 vocab: failed on 風邪andひつよう", "source": "imported"}, {"id": 100150, "date": "2026-07-18", "resource": "WaniKani", "minutes": 4.7, "note": "Vocab: failed on 人工and日", "source": "imported"}, {"id": 100151, "date": "2026-07-18", "resource": "Immersion (Anime)", "minutes": 28.7, "note": "", "source": "imported"}, {"id": 100152, "date": "2026-07-18", "resource": "Kaishi 1.5k", "minutes": 7.4, "note": "Vocab: kaeru, oku, naru, shiru", "source": "imported"}, {"id": 100153, "date": "2026-07-18", "resource": "Bunpro Grammar", "minutes": 10.9, "note": "", "source": "imported"}, {"id": 100154, "date": "2026-07-18", "resource": "Bunpro Grammar", "minutes": 4.6, "note": "N5 grammar: failed on negative u verbs and a-re", "source": "imported"}, {"id": 100155, "date": "2026-07-18", "resource": "WaniKani", "minutes": 11.1, "note": "Radicals: hand, exit, heaven, five, small, flag, hair, bow, child, thousand, evening", "source": "imported"}, {"id": 100156, "date": "2026-07-18", "resource": "Bunpro Vocab", "minutes": 25.2, "note": "", "source": "imported"}, {"id": 100157, "date": "2026-07-17", "resource": "Bunpro Grammar", "minutes": 2.6, "note": "N5 grammar: failed on negative ru verbs", "source": "imported"}, {"id": 100158, "date": "2026-07-17", "resource": "WaniKani", "minutes": 2.3, "note": "", "source": "imported"}, {"id": 100159, "date": "2026-07-17", "resource": "Bunpro Grammar", "minutes": 3.6, "note": "N5 grammar: failed on negative ru verbs", "source": "imported"}, {"id": 100160, "date": "2026-07-17", "resource": "Other", "minutes": 20.6, "note": "Tofugu: onyomi and kunyomi", "source": "imported"}, {"id": 100161, "date": "2026-07-17", "resource": "Other", "minutes": 23.8, "note": "Tofugu grammar points: wa and ga", "source": "imported"}, {"id": 100162, "date": "2026-07-17", "resource": "WaniKani", "minutes": 1.4, "note": "", "source": "imported"}, {"id": 100163, "date": "2026-07-17", "resource": "Reading", "minutes": 8.4, "note": "", "source": "imported"}, {"id": 100164, "date": "2026-07-17", "resource": "Kaishi 1.5k", "minutes": 4.5, "note": "narimasu: to be, to become", "source": "imported"}, {"id": 100165, "date": "2026-07-17", "resource": "Bunpro Grammar", "minutes": 11.6, "note": "Dangerous: kiken, Question: shitsumon", "source": "imported"}, {"id": 100166, "date": "2026-07-17", "resource": "WaniKani", "minutes": 12.1, "note": "Wanikani level 2", "source": "imported"}, {"id": 100167, "date": "2026-07-17", "resource": "Bunpro Vocab", "minutes": 14.1, "note": "Ordering food", "source": "imported"}, {"id": 100168, "date": "2026-07-16", "resource": "Bunpro Grammar", "minutes": 5.8, "note": "", "source": "imported"}, {"id": 100169, "date": "2026-07-16", "resource": "WaniKani", "minutes": 4.6, "note": "", "source": "imported"}, {"id": 100170, "date": "2026-07-16", "resource": "Other", "minutes": 18.8, "note": "Yoku.bi: te form, conjugation", "source": "imported"}, {"id": 100171, "date": "2026-07-16", "resource": "Bunpro Grammar", "minutes": 2.3, "note": "N5 grammar: failed on negative ru verbs", "source": "imported"}, {"id": 100172, "date": "2026-07-16", "resource": "Bunpro Grammar", "minutes": 4.4, "note": "N5 grammar: failed on negative ru verbs and ru verbs", "source": "imported"}, {"id": 100173, "date": "2026-07-16", "resource": "WaniKani", "minutes": 3.1, "note": "Failed on kuchi vocab reading", "source": "imported"}, {"id": 100174, "date": "2026-07-16", "resource": "Reading", "minutes": 9.1, "note": "Shinobi", "source": "imported"}, {"id": 100175, "date": "2026-07-16", "resource": "Kaishi 1.5k", "minutes": 3.8, "note": "Kaishi 1.5k", "source": "imported"}, {"id": 100176, "date": "2026-07-16", "resource": "Bunpro Grammar", "minutes": 14.2, "note": "N5 grammar: godan and ichidan verbs", "source": "imported"}, {"id": 100177, "date": "2026-07-16", "resource": "WaniKani", "minutes": 11.1, "note": "Kanji/Vocab: Woman, Mountain, Mouth, River, Big, Adult", "source": "imported"}, {"id": 100178, "date": "2026-07-16", "resource": "Bunpro Vocab", "minutes": 20.6, "note": "Finished up Section 2 Unit 9, Score 13", "source": "imported"}, {"id": 100179, "date": "2026-07-15", "resource": "Genki Textbook", "minutes": 30.3, "note": "Genki Lesson 2: Vocab", "source": "imported"}, {"id": 100180, "date": "2026-07-15", "resource": "WaniKani", "minutes": 1.1, "note": "", "source": "imported"}, {"id": 100181, "date": "2026-07-15", "resource": "Bunpro Grammar", "minutes": 2.0, "note": "", "source": "imported"}, {"id": 100182, "date": "2026-07-15", "resource": "WaniKani", "minutes": 1.5, "note": "", "source": "imported"}, {"id": 100183, "date": "2026-07-15", "resource": "WaniKani", "minutes": 1.1, "note": "", "source": "imported"}, {"id": 100184, "date": "2026-07-15", "resource": "Bunpro Grammar", "minutes": 0.8, "note": "", "source": "imported"}, {"id": 100185, "date": "2026-07-15", "resource": "WaniKani", "minutes": 3.0, "note": "", "source": "imported"}, {"id": 100186, "date": "2026-07-15", "resource": "Bunpro Vocab", "minutes": 15.4, "note": "", "source": "imported"}, {"id": 100187, "date": "2026-07-15", "resource": "Bunpro Grammar", "minutes": 1.6, "note": "", "source": "imported"}, {"id": 100188, "date": "2026-07-15", "resource": "WaniKani", "minutes": 1.4, "note": "", "source": "imported"}, {"id": 100189, "date": "2026-07-15", "resource": "Genki Textbook", "minutes": 25.3, "note": "N5 grammar: これ、それ、あれ", "source": "imported"}, {"id": 100190, "date": "2026-07-15", "resource": "Genki Textbook", "minutes": 18.5, "note": "N5 grammar: の、か。", "source": "imported"}, {"id": 100191, "date": "2026-07-15", "resource": "Bunpro Grammar", "minutes": 1.3, "note": "N5 reviews. Failed on な-adjectives and よ as an emphatic particle", "source": "imported"}];
+
+const STORAGE_KEY = 'jp-tracker-entries-v2';
+let _ls = null;
+try { _ls = window['local' + 'Storage']; } catch(e) { _ls = null; }
+
+function loadEntries() {
+  if (_ls) {
+    try {
+      const stored = _ls.getItem(STORAGE_KEY);
+      if (stored) return JSON.parse(stored);
+    } catch(e) {}
+  }
+  // First load: seed with imported entries
+  return JSON.parse(JSON.stringify(IMPORTED_ENTRIES));
+}
+
+function saveEntries(entries) {
+  if (_ls) {
+    try { _ls.setItem(STORAGE_KEY, JSON.stringify(entries)); } catch(e) {}
+  }
+  sbSyncEntries();
+}
+
+// ===== Supabase Sync (via REST API) =====
+const SB_URL = 'https://skugohaetnixszqrjujn.supabase.co/rest/v1';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNrdWdvaGFldG5peHN6cXJqdWpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3Mjk3MTgsImV4cCI6MjEwMTMwNTcxOH0.Ol9vXkgT9dJG-dVNm2aImDGl0fFhF8ISEY8vG87tQB0';
+const SB_HEADERS = {
+  'apikey': SB_KEY,
+  'Authorization': 'Bearer ' + SB_KEY,
+  'Content-Type': 'application/json'
+};
+let _sbOnline = navigator.onLine !== false;
+let _sbSyncing = false;
+
+async function sbFetch(path, opts) {
+  opts = opts || {};
+  opts.headers = Object.assign({}, SB_HEADERS, opts.headers || {});
+  const resp = await fetch(SB_URL + path, opts);
+  if (resp.status === 204) return null;
+  return resp.json();
+}
+
+let _sbEntriesTimer = null;
+function sbSyncEntries() {
+  clearTimeout(_sbEntriesTimer);
+  _sbEntriesTimer = setTimeout(async () => {
+    if (_sbSyncing) return;
+    try {
+      await sbFetch('/tracker_entries?id=neq.0', { method: 'DELETE' });
+      if (entries.length > 0) {
+        const rows = entries.map(e => ({ date: e.date, resource: e.resource, minutes: e.minutes, note: e.note || '' }));
+        for (let i = 0; i < rows.length; i += 100) {
+          await sbFetch('/tracker_entries', {
+            method: 'POST',
+            headers: { 'Prefer': 'return=minimal' },
+            body: JSON.stringify(rows.slice(i, i + 100))
+          });
+        }
+      }
+    } catch(e) {}
+  }, 800);
+}
+
+async function sbSyncAppData(key, value) {
+  try {
+    await sbFetch('/app_data', {
+      method: 'POST',
+      headers: { 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify({ key, value, updated_at: new Date().toISOString() })
+    });
+  } catch(e) {}
+}
+
+async function syncFromSupabase() {
+  _sbSyncing = true;
+  try {
+    const sbEntries = await sbFetch('/tracker_entries?select=*&order=date.asc');
+    if (sbEntries && sbEntries.length > 0) {
+      entries = sbEntries.map(r => ({ id: r.id, date: r.date, resource: r.resource, minutes: r.minutes, note: r.note || '', source: 'synced' }));
+      if (_ls) try { _ls.setItem(STORAGE_KEY, JSON.stringify(entries)); } catch(e) {}
+    } else {
+      sbSyncEntries();
+    }
+
+    const sd = await sbFetch("/app_data?select=value&key=eq.study_stats&limit=1");
+    if (sd && sd.length > 0) {
+      const merged = Object.assign({}, DEFAULT_STATS, sd[0].value);
+      if (_statsLs) try { _statsLs.setItem(STATS_KEY, JSON.stringify(merged)); } catch(e) {}
+      applyStats();
+    } else {
+      sbSyncAppData('study_stats', loadStats());
+    }
+
+    const cd = await sbFetch("/app_data?select=value&key=eq.tracker_categories&limit=1");
+    if (cd && cd.length > 0) {
+      categories = cd[0].value;
+      if (_ls) try { _ls.setItem(CAT_KEY, JSON.stringify(categories)); } catch(e) {}
+    } else {
+      sbSyncAppData('tracker_categories', categories);
+    }
+
+    const ld = await sbFetch("/app_data?select=value&key=eq.study_level&limit=1");
+    if (ld && ld.length > 0) {
+      if (_ls) try { _ls.setItem(LEVEL_KEY, ld[0].value); } catch(e) {}
+      const sel = document.getElementById('levelSelector');
+      if (sel) sel.value = ld[0].value;
+    } else {
+      sbSyncAppData('study_level', loadLevel());
+    }
+
+    const td = await sbFetch("/app_data?select=value&key=eq.study_step&limit=1");
+    if (td && td.length > 0) {
+      if (_ls) try { _ls.setItem(STEP_KEY, String(td[0].value)); } catch(e) {}
+      applyStep();
+    } else {
+      sbSyncAppData('study_step', loadStep());
+    }
+
+    populateDropdowns();
+    renderCharts();
+    renderEntryList();
+    renderCatList();
+  } catch(e) {}
+  _sbSyncing = false;
+}
+
+let entries = loadEntries();
+let showAllEntries = false;
+let resourceFilter = '';
+let trackerRange = 'all';
+let chartMode = 'both';
+let periodOffset = 0; // 0 = current period, -1 = previous, etc.
+
+function getDateRange() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  if (trackerRange === 'all') return null;
+  if (trackerRange === 'day') {
+    return { start: today, end: today, label: today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) };
+  }
+  if (trackerRange === 'week') {
+    const dayOfWeek = today.getDay();
+    const mondayOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    const thisMonday = new Date(today);
+    thisMonday.setDate(today.getDate() - mondayOffset + (periodOffset * 7));
+    const thisSunday = new Date(thisMonday);
+    thisSunday.setDate(thisMonday.getDate() + 6);
+    const fmt = d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const yearLabel = thisMonday.getFullYear();
+    return { start: thisMonday, end: thisSunday, label: `${fmt(thisMonday)} \u2013 ${fmt(thisSunday)}${yearLabel !== today.getFullYear() ? ' ' + yearLabel : ''}` };
+  }
+  if (trackerRange === 'month') {
+    const year = today.getFullYear();
+    const month = today.getMonth() + periodOffset;
+    const d = new Date(year, month, 1);
+    const startMonth = new Date(d.getFullYear(), d.getMonth(), 1);
+    const endMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    return { start: startMonth, end: endMonth, label: d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) };
+  }
+  if (trackerRange === 'year') {
+    const year = today.getFullYear() + periodOffset;
+    return { start: new Date(year, 0, 1), end: new Date(year, 11, 31), label: String(year) };
+  }
+  return null;
+}
+
+function localDateStr(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + day;
+}
+
+function getFilteredEntries() {
+  const range = getDateRange();
+  if (!range) return entries;
+  const startStr = localDateStr(range.start);
+  const endStr = localDateStr(range.end);
+  return entries.filter(e => e.date >= startStr && e.date <= endStr);
+}
+
+function setRange(range) {
+  trackerRange = range;
+  periodOffset = 0;
+  document.querySelectorAll('.range-btn[data-range]').forEach(b => b.classList.toggle('active', b.dataset.range === range));
+  const nav = document.getElementById('periodNav');
+  if (nav) nav.style.display = (range === 'week' || range === 'month' || range === 'year') ? 'inline-flex' : 'none';
+  updatePeriodLabel();
+  renderCharts();
+  renderEntryList();
+}
+
+function shiftPeriod(delta) {
+  periodOffset += delta;
+  updatePeriodLabel();
+  renderCharts();
+  renderEntryList();
+}
+
+function updatePeriodLabel() {
+  const range = getDateRange();
+  const labelEl = document.getElementById('periodLabel');
+  if (labelEl && range) {
+    labelEl.textContent = range.label;
+  }
+}
+
+function openPeriodPicker() {
+  const picker = document.getElementById('periodDatePicker');
+  if (!picker) return;
+  var range = getDateRange();
+  if (range) {
+    var mid = new Date(range.start);
+    mid.setDate(range.start.getDate() + Math.floor((range.end - range.start) / (1000*60*60*24) / 2));
+    picker.value = mid.toISOString().split('T')[0];
+  }
+  if (picker.showPicker) {
+    picker.showPicker();
+  } else {
+    picker.style.pointerEvents = 'auto';
+    picker.style.opacity = '1';
+    picker.style.width = 'auto';
+    picker.style.height = 'auto';
+    picker.click();
+  }
+}
+
+function onPeriodDateChange() {
+  var picker = document.getElementById('periodDatePicker');
+  if (!picker || !picker.value) return;
+  var selected = new Date(picker.value + 'T00:00:00');
+  var now = new Date();
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  if (trackerRange === 'year') {
+    periodOffset = selected.getFullYear() - today.getFullYear();
+  } else if (trackerRange === 'month') {
+    var monthDiff = (selected.getFullYear() - today.getFullYear()) * 12 + (selected.getMonth() - today.getMonth());
+    periodOffset = monthDiff;
+  } else if (trackerRange === 'week') {
+    var selDay = selected.getDay();
+    var selMondayOffset = selDay === 0 ? 6 : selDay - 1;
+    var selMonday = new Date(selected);
+    selMonday.setDate(selected.getDate() - selMondayOffset);
+    var todayDay = today.getDay();
+    var curMondayOffset = todayDay === 0 ? 6 : todayDay - 1;
+    var curMonday = new Date(today);
+    curMonday.setDate(today.getDate() - curMondayOffset);
+    var weekDiff = Math.round((selMonday - curMonday) / (7 * 24 * 60 * 60 * 1000));
+    periodOffset = weekDiff;
+  }
+  picker.style.pointerEvents = 'none';
+  picker.style.opacity = '0';
+  picker.style.width = '1px';
+  picker.style.height = '1px';
+  updatePeriodLabel();
+  renderCharts();
+  renderEntryList();
+}
+
+function setChartMode(mode) {
+  chartMode = mode;
+  document.querySelectorAll('.chart-toggle button').forEach(b => b.classList.toggle('active', b.dataset.chart === mode));
+  const pieCol = document.getElementById('pieChartCol');
+  const barCol = document.getElementById('barChartCol');
+  if (pieCol) pieCol.style.display = (mode === 'both' || mode === 'pie') ? '' : 'none';
+  if (barCol) barCol.style.display = (mode === 'both' || mode === 'bar') ? '' : 'none';
+}
+
+const DEFAULT_CATEGORIES = {
+  'WaniKani': '#7c5cfc',
+  'Kaishi 1.5k': '#4ade80',
+  'Bunpro Grammar': '#22d3ee',
+  'Bunpro Vocab': '#06b6d4',
+  'Podcasts': '#fb923c',
+  'Immersion (Anime)': '#facc15',
+  'Reading': '#f87171',
+  'Genki Textbook': '#e879f9',
+  'Other': '#94a3b8'
+};
+
+const CAT_KEY = 'jp-tracker-categories-v2';
+let categories = {};
+
+function loadCategories() {
+  if (_ls) {
+    try {
+      const stored = _ls.getItem(CAT_KEY);
+      if (stored) {
+        const cats = JSON.parse(stored);
+        // Migration: ensure every entry resource has a category
+        const entryResources = [...new Set(entries.map(e => e.resource))];
+        entryResources.forEach(r => {
+          if (!cats[r]) cats[r] = DEFAULT_CATEGORIES[r] || '#94a3b8';
+        });
+        return cats;
+      }
+    } catch(e) {}
+  }
+  return JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+}
+
+function saveCategories() {
+  if (_ls) {
+    try { _ls.setItem(CAT_KEY, JSON.stringify(categories)); } catch(e) {}
+  }
+  sbSyncAppData('tracker_categories', categories);
+}
+
+function getColor(resource) {
+  return categories[resource] || '#94a3b8';
+}
+
+function populateDropdowns() {
+  const entrySelect = document.getElementById('entryResource');
+  const filterSelect = document.getElementById('filterResource');
+  const catNames = Object.keys(categories);
+  entrySelect.innerHTML = catNames.map(c => `<option>${c}</option>`).join('');
+  filterSelect.innerHTML = '<option value="">All Resources</option>' + catNames.map(c => `<option>${c}</option>`).join('');
+  filterSelect.value = resourceFilter;
+}
+
+function renderCatList() {
+  const listEl = document.getElementById('catList');
+  const catNames = Object.keys(categories);
+  listEl.innerHTML = catNames.map(name => {
+    const count = entries.filter(e => e.resource === name).length;
+    return `<div class="cat-row" data-cat="${name}">
+      <input type="color" value="${categories[name]}" onchange="updateCatColor('${name}', this.value)">
+      <input type="text" value="${name}" onchange="renameCat('${name}', this.value)">
+      <span class="cat-count">${count}</span>
+      ${name !== 'Other' ? `<button class="cat-del" onclick="deleteCat('${name}')">Delete</button>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function updateCatColor(oldName, newColor) {
+  categories[oldName] = newColor;
+  saveCategories();
+  renderCharts();
+  renderEntryList();
+}
+
+function renameCat(oldName, newName) {
+  newName = newName.trim();
+  if (!newName || newName === oldName) return;
+  if (categories[newName]) {
+    alert('A category named "' + newName + '" already exists.');
+    renderCatList();
+    return;
+  }
+  const newCats = {};
+  Object.keys(categories).forEach(k => {
+    if (k === oldName) { newCats[newName] = categories[oldName]; }
+    else { newCats[k] = categories[k]; }
+  });
+  categories = newCats;
+  entries.forEach(e => { if (e.resource === oldName) e.resource = newName; });
+  saveEntries(entries);
+  saveCategories();
+  populateDropdowns();
+  renderCatList();
+  renderCharts();
+  renderEntryList();
+}
+
+function deleteCat(name) {
+  if (name === 'Other') return;
+  const count = entries.filter(e => e.resource === name).length;
+  if (count > 0) {
+    if (!confirm(`"${name}" has ${count} entries. They will be moved to "Other". Continue?`)) return;
+    entries.forEach(e => { if (e.resource === name) e.resource = 'Other'; });
+    saveEntries(entries);
+  }
+  delete categories[name];
+  saveCategories();
+  populateDropdowns();
+  renderCatList();
+  renderCharts();
+  renderEntryList();
+}
+
+function addCategory() {
+  const name = document.getElementById('newCatName').value.trim();
+  const color = document.getElementById('newCatColor').value;
+  if (!name) return;
+  if (categories[name]) { alert('A category named "' + name + '" already exists.'); return; }
+  categories[name] = color;
+  saveCategories();
+  populateDropdowns();
+  renderCatList();
+  document.getElementById('newCatName').value = '';
+  document.getElementById('newCatColor').value = '#60a5fa';
+  renderCharts();
+  renderEntryList();
+}
+
+function openCatModal() {
+  renderCatList();
+  document.getElementById('catModal').classList.add('active');
+}
+
+function closeCatModal() {
+  document.getElementById('catModal').classList.remove('active');
+}
+
+function getDailyData() {
+  const daily = {};
+  getFilteredEntries().forEach(e => {
+    if (!daily[e.date]) daily[e.date] = {};
+    daily[e.date][e.resource] = (daily[e.date][e.resource] || 0) + e.minutes;
+  });
+  return daily;
+}
+
+function getResourceTotals() {
+  const totals = {};
+  getFilteredEntries().forEach(e => {
+    totals[e.resource] = (totals[e.resource] || 0) + e.minutes;
+  });
+  return totals;
+}
+
+let pieChart = null, barChart = null;
+
+function renderCharts() {
+  const totals = getResourceTotals();
+  const sortedResources = Object.entries(totals).sort((a,b) => b[1]-a[1]);
+  const labels = sortedResources.map(r => r[0]);
+  const data = sortedResources.map(r => r[1]);
+  const colors = labels.map(l => getColor(l));
+
+  // Pie chart
+  if (pieChart) pieChart.destroy();
+  pieChart = new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: colors, borderColor: '#1a1d27', borderWidth: 2 }] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${(ctx.raw/60).toFixed(1)}h (${ctx.raw}min)` } }
+      },
+      cutout: '60%'
+    }
+  });
+
+  // Legend
+  const legendEl = document.getElementById('pieLegend');
+  legendEl.innerHTML = sortedResources.map(r =>
+    `<div style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:${getColor(r[0])};flex-shrink:0;"></span>${r[0]} <span style="color:var(--text-faint);">${(r[1]/60).toFixed(1)}h</span></div>`
+  ).join('');
+
+  // Bar chart
+  const daily = getDailyData();
+  const dates = Object.keys(daily).sort();
+  const allResources = [...new Set(Object.values(daily).flatMap(d => Object.keys(d)))];
+  const datasets = allResources.map(res => ({
+    label: res,
+    data: dates.map(d => daily[d][res] || 0),
+    backgroundColor: getColor(res),
+    borderColor: getColor(res),
+    borderWidth: 0,
+    borderRadius: 3,
+  }));
+
+  if (barChart) barChart.destroy();
+  barChart = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: { labels: dates.map(d => d.slice(5)), datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${ctx.raw}min` } }
+      },
+      scales: {
+        x: { stacked: true, grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } },
+        y: { stacked: true, grid: { color: '#2a2e3c' }, ticks: { color: '#64748b', font: { size: 9 } }, title: { display: true, text: 'Minutes', color: '#64748b', font: { size: 10 } } }
+      }
+    }
+  });
+
+  // Update stats
+  const totalMin = Object.values(totals).reduce((a,b) => a+b, 0);
+  const activeDays = dates.length;
+  const topResource = sortedResources[0];
+  document.getElementById('stat-total').textContent = (totalMin/60).toFixed(1) + 'h';
+  document.getElementById('stat-avg').textContent = activeDays > 0 ? (totalMin/activeDays/60).toFixed(1) + 'h' : '0h';
+  document.getElementById('stat-top').textContent = topResource ? topResource[0] : '-';
+  document.getElementById('stat-days').textContent = activeDays;
+  document.getElementById('tracker-total-badge').textContent = `Total: ${(totalMin/60).toFixed(1)}h (${activeDays} days)`;
+  document.getElementById('tracker-entries-badge').textContent = `${entries.length} entries`;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderEntryList() {
+  let filtered = getFilteredEntries().slice().sort((a,b) => b.date.localeCompare(a.date) || b.id - a.id);
+  if (resourceFilter) {
+    filtered = filtered.filter(e => e.resource === resourceFilter);
+  }
+
+  // Group by date
+  const grouped = {};
+  filtered.forEach(e => {
+    if (!grouped[e.date]) grouped[e.date] = [];
+    grouped[e.date].push(e);
+  });
+
+  const dates = Object.keys(grouped).sort((a,b) => b.localeCompare(a));
+
+  // If not showing all, only show last 7 dates
+  let displayDates = dates;
+  if (!showAllEntries && dates.length > 7) {
+    displayDates = dates.slice(0, 7);
+  }
+
+  const listEl = document.getElementById('entryList');
+  document.getElementById('entryCount').textContent = `(${filtered.length})`;
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = '<div style="color: var(--text-faint); font-size: 0.82rem; text-align: center; padding: 20px;">No entries found.</div>';
+    return;
+  }
+
+  let html = '';
+  displayDates.forEach(date => {
+    const dayEntries = grouped[date];
+    const dayTotal = dayEntries.reduce((s,e) => s + e.minutes, 0);
+    html += `<div style="padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 0.78rem; color: var(--text-faint); display: flex; justify-content: space-between;"><span>${date}</span><span>${(dayTotal/60).toFixed(1)}h</span></div>`;
+    dayEntries.forEach(e => {
+      const isImported = e.source === 'imported';
+      html += `<div class="entry-row" data-id="${e.id}" style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
+        <span style="width:8px;height:8px;border-radius:50%;background:${getColor(e.resource)};flex-shrink:0;"></span>
+        <span style="color:var(--text);min-width:120px;">${escapeHtml(e.resource)}</span>
+        <span style="color:var(--text-dim);min-width:50px;">${e.minutes}min</span>
+        <span style="color:var(--text-faint);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(e.note || '')}</span>
+        ${isImported ? '<span style="font-size:0.65rem;color:var(--text-faint);background:var(--bg);padding:1px 5px;border-radius:3px;border:1px solid var(--border);">imported</span>' : ''}
+        <button onclick="editEntry(${e.id})" style="background:none;border:none;color:var(--accent-light);cursor:pointer;font-size:0.78rem;padding:2px 6px;">Edit</button>
+        <button onclick="deleteEntry(${e.id})" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.82rem;padding:2px 6px;">Delete</button>
+      </div>`;
+    });
+  });
+
+  if (!showAllEntries && dates.length > 7) {
+    html += `<div style="text-align:center;padding:10px;"><button onclick="toggleShowAll()" style="background:var(--bg);border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 16px;font-size:0.78rem;cursor:pointer;">Show All ${dates.length} Dates</button></div>`;
+  } else if (showAllEntries && dates.length > 7) {
+    html += `<div style="text-align:center;padding:10px;"><button onclick="toggleShowAll()" style="background:var(--bg);border:1px solid var(--border);color:var(--text-dim);border-radius:6px;padding:6px 16px;font-size:0.78rem;cursor:pointer;">Show Recent Only</button></div>`;
+  }
+
+  listEl.innerHTML = html;
+}
+
+function toggleShowAll() {
+  showAllEntries = !showAllEntries;
+  renderEntryList();
+}
+
+function editEntry(id) {
+  const entry = entries.find(e => e.id === id);
+  if (!entry) return;
+  const row = document.querySelector(`.entry-row[data-id="${id}"]`);
+  if (!row) return;
+
+  const resources = Object.keys(categories);
+  row.innerHTML = `
+    <input type="date" id="editDate-${id}" value="${entry.date}" style="background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:4px;font-size:0.78rem;">
+    <select id="editResource-${id}" style="background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:4px;font-size:0.78rem;">
+      ${resources.map(r => `<option ${r === entry.resource ? 'selected' : ''}>${r}</option>`).join('')}
+    </select>
+    <input type="number" id="editMinutes-${id}" value="${entry.minutes}" min="1" max="600" style="background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:4px;font-size:0.78rem;width:55px;">
+    <input type="text" id="editNote-${id}" value="${escapeHtml(entry.note || '')}" placeholder="note" style="background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:4px;font-size:0.78rem;flex:1;">
+    <button onclick="saveEdit(${id})" style="background:var(--accent);border:none;color:white;border-radius:4px;padding:4px 10px;font-size:0.78rem;cursor:pointer;">Save</button>
+    <button onclick="renderEntryList()" style="background:var(--bg);border:1px solid var(--border);color:var(--text-dim);border-radius:4px;padding:4px 10px;font-size:0.78rem;cursor:pointer;">Cancel</button>
+  `;
+}
+
+function saveEdit(id) {
+  const date = document.getElementById(`editDate-${id}`).value;
+  const resource = document.getElementById(`editResource-${id}`).value;
+  const minutes = parseFloat(document.getElementById(`editMinutes-${id}`).value);
+  const note = document.getElementById(`editNote-${id}`).value.trim();
+  if (!date || !minutes || minutes < 1) return;
+  const entry = entries.find(e => e.id === id);
+  if (entry) {
+    entry.date = date;
+    entry.resource = resource;
+    entry.minutes = minutes;
+    entry.note = note;
+    entry.source = 'edited';
+    saveEntries(entries);
+    renderEntryList();
+    renderCharts();
+  }
+}
+
+function deleteEntry(id) {
+  entries = entries.filter(e => e.id !== id);
+  saveEntries(entries);
+  renderEntryList();
+  renderCharts();
+}
+
+
+// Built-in Timer
+let timerInterval = null;
+let timerStartMs = 0;
+let timerElapsedMs = 0;
+let timerRunning = false;
+
+function timerUpdateDisplay() {
+  const totalSec = Math.floor(timerElapsedMs / 1000);
+  const min = String(Math.floor(totalSec / 60)).padStart(2, '0');
+  const sec = String(totalSec % 60).padStart(2, '0');
+  document.getElementById('timerDisplay').textContent = min + ':' + sec;
+}
+
+function timerStart() {
+  if (timerRunning) return;
+  timerRunning = true;
+  timerStartMs = Date.now();
+  timerInterval = setInterval(() => {
+    timerElapsedMs += Date.now() - timerStartMs;
+    timerStartMs = Date.now();
+    timerUpdateDisplay();
+  }, 1000);
+  document.getElementById('timerStartBtn').style.display = 'none';
+  document.getElementById('timerPauseBtn').style.display = '';
+  document.getElementById('timerStopBtn').style.display = '';
+  document.getElementById('timerResetBtn').style.display = '';
+}
+
+function timerPause() {
+  if (!timerRunning) return;
+  timerRunning = false;
+  timerElapsedMs += Date.now() - timerStartMs;
+  clearInterval(timerInterval);
+  timerUpdateDisplay();
+  document.getElementById('timerPauseBtn').textContent = 'Resume';
+  document.getElementById('timerPauseBtn').onclick = function() { timerStart(); this.textContent = 'Pause'; };
+}
+
+function timerStop() {
+  timerRunning = false;
+  if (timerInterval) clearInterval(timerInterval);
+  timerElapsedMs += Date.now() - timerStartMs;
+  const minutes = Math.max(1, Math.round(timerElapsedMs / 60000));
+  document.getElementById('entryMinutes').value = minutes;
+  timerUpdateDisplay();
+  // Reset button visibility
+  document.getElementById('timerStartBtn').style.display = '';
+  document.getElementById('timerPauseBtn').style.display = 'none';
+  document.getElementById('timerStopBtn').style.display = 'none';
+  // Keep Reset visible so user can clear if needed
+}
+
+function timerReset() {
+  timerRunning = false;
+  if (timerInterval) clearInterval(timerInterval);
+  timerElapsedMs = 0;
+  timerStartMs = 0;
+  timerUpdateDisplay();
+  document.getElementById('timerStartBtn').style.display = '';
+  document.getElementById('timerPauseBtn').style.display = 'none';
+  document.getElementById('timerStopBtn').style.display = 'none';
+  document.getElementById('timerResetBtn').style.display = 'none';
+  document.getElementById('timerPauseBtn').textContent = 'Pause';
+  document.getElementById('timerPauseBtn').onclick = function() { timerPause(); };
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today's date
+  const today = new Date();
+  const offset = today.getTimezoneOffset();
+  const local = new Date(today.getTime() - offset * 60000);
+  document.getElementById('entryDate').value = local.toISOString().split('T')[0];
+
+  // Quick-add buttons
+  document.querySelectorAll('.quick-add').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('entryMinutes').value = btn.dataset.min;
+    });
+  });
+
+  // Add entry
+  document.getElementById('addEntryBtn').addEventListener('click', () => {
+    const date = document.getElementById('entryDate').value;
+    const resource = document.getElementById('entryResource').value;
+    const minutes = parseFloat(document.getElementById('entryMinutes').value);
+    const note = document.getElementById('entryNote').value.trim();
+    if (!date || !minutes || minutes < 1) return;
+    entries.push({ id: Date.now(), date, resource, minutes, note, source: 'manual' });
+    saveEntries(entries);
+    document.getElementById('entryNote').value = '';
+    renderEntryList();
+    renderCharts();
+  });
+
+  // Filter
+  document.getElementById('filterResource').addEventListener('change', (e) => {
+    resourceFilter = e.target.value;
+    renderEntryList();
+  });
+
+  // Toggle entries button
+  document.getElementById('toggleEntries').addEventListener('click', () => {
+    showAllEntries = !showAllEntries;
+    renderEntryList();
+  });
+
+  // Export
+  document.getElementById('exportBtn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(entries, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'jp-tracker-entries.json'; a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  // Import
+  document.getElementById('importBtn').addEventListener('click', () => {
+    document.getElementById('importFile').click();
+  });
+  document.getElementById('importFile').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const imported = JSON.parse(ev.target.result);
+        if (Array.isArray(imported)) {
+          entries = imported;
+          saveEntries(entries);
+          renderEntryList();
+          renderCharts();
+        }
+      } catch(err) { alert('Invalid JSON file'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  });
+
+  // Reset
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (confirm('Reset to the original 192 imported entries? This will discard all changes.')) {
+      entries = JSON.parse(JSON.stringify(IMPORTED_ENTRIES));
+      saveEntries(entries);
+      renderEntryList();
+      renderCharts();
+    }
+  });
+
+  categories = loadCategories();
+  populateDropdowns();
+  renderCharts();
+  renderEntryList();
+  
+  // Categories modal
+  document.getElementById('manageCategoriesBtn').addEventListener('click', openCatModal);
+  document.getElementById('saveCatBtn').addEventListener('click', closeCatModal);
+  document.getElementById('addCatBtn').addEventListener('click', addCategory);
+  document.getElementById('newCatName').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') addCategory();
+  });
+  document.getElementById('catModal').addEventListener('click', (e) => {
+    if (e.target.id === 'catModal') closeCatModal();
+  });
+  // Period date picker
+  document.getElementById('periodDatePicker').addEventListener('change', onPeriodDateChange);
+  // Sync from Supabase after initial render
+  syncFromSupabase();
+});
+</script>
+</body>
+</html>
